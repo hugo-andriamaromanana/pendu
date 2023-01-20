@@ -1,5 +1,3 @@
-#Hangman using Pygame only using 6 letter words
-
 import pygame
 import random
 import time
@@ -76,10 +74,6 @@ def scoreboardprint_sorted():
         medium_scoreboard+=i+" : "+str(medium_scoreboard_data[i])+" points"+"\n"
     for i in hard_scoreboard_data:
         hard_scoreboard+=i+" : "+str(hard_scoreboard_data[i])+" points"+"\n"
-
-sort_scoreboard_data_by_score()
-scoreboardprint_sorted()
-print(easy_scoreboard)
 
 def score_calculate(elapsed_time,tries_left):
     return int(1000*(tries_left/elapsed_time))
