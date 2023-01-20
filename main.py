@@ -2,6 +2,7 @@ import pygame
 import random
 import time
 import json
+import sys
 #---------------------Setup---------------------
 
 #---------------------Importing Files-----------
@@ -60,8 +61,6 @@ easy_scoreboard_data=scoreboard[([i for i in scoreboard])[0]]
 medium_scoreboard_data=scoreboard[([i for i in scoreboard])[1]]
 hard_scoreboard_data=scoreboard[([i for i in scoreboard])[2]]
 name=""
-
-
 
 #---------------------Functions----------------------------
 
@@ -224,5 +223,105 @@ class InputBox:
         self.text_surface = self.font.render(self.text, False, self.text_color)
         self.text_rect = self.text_surface.get_rect(center=(self.x + self.width/2, self.y + self.height/2))
 
+#---------------------GUI Functions---------------------
+
+def draw_text(text, x, y, font_size, color):
+    font = pygame.font.SysFont('Comic Sans MS', font_size)
+    text_surface = font.render(text, False, color)
+    text_rect = text_surface.get_rect(center=(x, y))
+    screen.blit(text_surface, text_rect)
+
+#Home screen GUI with 3 buttons to choose gamemode
+
+def home_screen_gui():
+    global gamemode
+    global name
+    global scoreboard
+    global score
+    global errors
+    global time_left
+    global game_over
+    global word_to_guess
+    global word_to_guess_display
+    global content
+    global MODE
+
+    #Buttons
+    easy_button = Button(100, 100, 200, 100, "Easy", (0, 255, 0), (0, 0, 0), 50)
+    medium_button = Button(100, 250, 200, 100, "Medium", (255, 255, 0), (0, 0, 0), 50)
+    hard_button = Button(100, 400, 200, 100, "Hard", (255, 0, 0), (0, 0, 0), 50)
+
+    #Input box
+    input_box = InputBox(500, 100, 200, 100, "Enter your name", (255, 255, 255), (0, 0, 0), 50)
+
+    #Scoreboard
+    scoreboard_text = "Scoreboard"
+    scoreboard_text_x = 500
+    scoreboard_text_y = 250
+    scoreboard_text_font_size = 50
+    scoreboard_text_color = (0, 0, 0)
+
+    #Draw buttons
+    easy_button.draw()
+    medium_button.draw()
+    hard_button.draw()
+
+    #Draw input box
+    input_box.draw()
+
+    #Draw scoreboard
+    draw_text(scoreboard_text, scoreboard_text_x, scoreboard_text_y, scoreboard_text_font_size, scoreboard_text_color)
+
+    #Draw scoreboard
+    y = 300
+    for mode in scoreboard:
+        for name in scoreboard[mode]:
+            draw_text(name + ": " + str(scoreboard[mode][name]), scoreboard_text_x, y, 25, (0, 0, 0))
+            y += 25
+    
+    #Check if buttons are clicked
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_pos = pygame.mouse.get_pos()
+            if easy_button.is_clicked(mouse_pos):
+                set_mode("Easy")
+                set_time_left()
+                game_over = False
+                word_to_guess = random.choice(content)
+                word_to_guess_display = ["_" for i in range(len(word_to_guess))]
+                errors = 0
+                score = 0
+                name = ""
+            elif medium_button.is_clicked(mouse_pos):
+                set_mode("Medium")
+                set_time_left()
+                game_over = False
+                word_to_guess = random.choice(content)
+                word_to_guess_display = ["_" for i in range(len(word_to_guess))]
+                errors = 0
+                score = 0
+                name = ""
+            elif hard_button.is_clicked(mouse_pos):
+                set_mode("Hard")
+                set_time_left()
+                game_over = False
+                word_to_guess = random.choice(content)
+                word_to_guess_display = ["_" for i in range(len(word_to_guess))]
+                errors = 0
+                score = 0
+                name = ""
+
+#---------------------Game Functions---------------------
+
+
 #---------------------Main Loop---------------------
 while True:
+    screen.fill((255, 255, 255))
+    home_screen_gui()
+    pygame.display.update()
+    clock.tick(60)
+
+
