@@ -24,6 +24,12 @@ with open("scoreboard.json","r") as f:
 
 
 #---------------------Constantes---------------------
+BLACK=(0,0,0)
+WHITE=(255,255,255)
+RED=(255,0,0)
+GREEN=(0,255,0)
+BLUE=(0,0,255)
+YELLOW=(255,255,0)
 MODE={
     "Easy":{
         "MAX_TIME":180,
@@ -53,6 +59,7 @@ game_over=False
 easy_scoreboard_data=scoreboard[([i for i in scoreboard])[0]]
 medium_scoreboard_data=scoreboard[([i for i in scoreboard])[1]]
 hard_scoreboard_data=scoreboard[([i for i in scoreboard])[2]]
+name=""
 
 
 
@@ -134,3 +141,88 @@ def play_again():
     game_over=False
     gamemode=""#current gamemode
 
+def set_mode(mode):
+    global gamemode
+    gamemode=MODE[mode]
+
+def set_time_left():
+    global gamemode
+    global time_left
+    time_left=MODE[gamemode]["MAX_TIME"]
+
+def update_scoreboard():
+    global gamemode
+    global scoreboard
+    global score
+    global name
+    scoreboard[gamemode][name]=score
+
+def save_scoreboard():
+    global scoreboard
+    with open("scoreboard.json","w") as f:
+        json.dump(scoreboard,f)
+
+#---------------------Pygame---------------------
+pygame.init()
+pygame.font.init()
+pygame.display.set_caption("Hangman")
+screen = pygame.display.set_mode((800, 600))
+clock = pygame.time.Clock()
+
+#---------------------Classes---------------------
+
+class Button:
+    def __init__(self, x, y, width, height, text, color, text_color, font_size):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.text = text
+        self.color = color
+        self.text_color = text_color
+        self.font_size = font_size
+        self.font = pygame.font.SysFont('Comic Sans MS', self.font_size)
+        self.text_surface = self.font.render(self.text, False, self.text_color)
+        self.text_rect = self.text_surface.get_rect(center=(self.x + self.width/2, self.y + self.height/2))
+
+    def draw(self):
+        pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
+        screen.blit(self.text_surface, self.text_rect)
+
+    def is_clicked(self, mouse_pos):
+        if mouse_pos[0] > self.x and mouse_pos[0] < self.x + self.width and mouse_pos[1] > self.y and mouse_pos[1] < self.y + self.height:
+            return True
+        else:
+            return False
+
+class InputBox:
+    def __init__(self, x, y, width, height, text, color, text_color, font_size):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.text = text
+        self.color = color
+        self.text_color = text_color
+        self.font_size = font_size
+        self.font = pygame.font.SysFont('Comic Sans MS', self.font_size)
+        self.text_surface = self.font.render(self.text, False, self.text_color)
+        self.text_rect = self.text_surface.get_rect(center=(self.x + self.width/2, self.y + self.height/2))
+
+    def draw(self):
+        pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
+        screen.blit(self.text_surface, self.text_rect)
+
+    def is_clicked(self, mouse_pos):
+        if mouse_pos[0] > self.x and mouse_pos[0] < self.x + self.width and mouse_pos[1] > self.y and mouse_pos[1] < self.y + self.height:
+            return True
+        else:
+            return False
+
+    def update_text(self, text):
+        self.text = text
+        self.text_surface = self.font.render(self.text, False, self.text_color)
+        self.text_rect = self.text_surface.get_rect(center=(self.x + self.width/2, self.y + self.height/2))
+
+#---------------------Main Loop---------------------
+while True:
