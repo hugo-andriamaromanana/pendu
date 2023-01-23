@@ -120,6 +120,15 @@ def get_3_best(dic):
 def eggman_display_every_1s():
     pygame.time.set_timer(UPDATEEGGMANANIMATION, 1000)
 
+def confetti_time():
+    for i in range(50):
+        x = random.randint(0, 700)
+        y = random.randint(0, 500)
+        width = random.randint(5, 20)
+        height = random.randint(5, 20)
+        confetti_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+        confetti_list.append([pygame.Rect(x, y, width, height), confetti_color])
+
 
 
 # #---------------------Pygame---------------------
@@ -175,6 +184,9 @@ click_me_button_rect_center=click_me_button_text.get_rect(center=click_me_button
 state="main_menu"
 sub_surface = [0, 0, 200, 200]
 UPDATEEGGMANANIMATION = USEREVENT+1
+clock = pygame.time.Clock()
+confetti_list = []
+
 
 def game_state(state):
     if state=="main_menu":
@@ -220,7 +232,14 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if state=="main_menu":
                 if click_me_button_rect.collidepoint(event.pos):
-                    sub_surface[0]=0
+                    screen.fill((255, 255, 255))
+                    confetti_time()
+                    for confetti in confetti_list:
+                        confetti[0].y += 1
+                    for confetti in confetti_list:
+                        pygame.draw.rect(screen, confetti[1], confetti[0])
+                    print(confetti_list)
+                    clock.tick(60)
                 if exit_button_rect.collidepoint(event.pos):
                     running=False
                 elif hard_button_rect.collidepoint(event.pos):
