@@ -8,15 +8,10 @@ import sys
 #---------------------Importing Files-----------
 
 #---------------------Importing txt-----------
-#open the file
 f = open('mots.txt', 'r')
-#read the file
 content = f.read()
-#Make the file a list
 content = content.split('\n')
-#remove tag
 content=content[1:]
-#make all the words lowercase
 content = [i.lower() for i in content]
 #---------------------Importing Json-----------
 
@@ -63,7 +58,7 @@ easy_scoreboard_data=scoreboard[([i for i in scoreboard])[0]]
 medium_scoreboard_data=scoreboard[([i for i in scoreboard])[1]]
 hard_scoreboard_data=scoreboard[([i for i in scoreboard])[2]]
 name=""
-
+running=True
 #---------------------Functions----------------------------
 
 def sort_scoreboard_data_by_score():
@@ -87,13 +82,6 @@ def scoreboardprint_sorted():
 
 def score_calculate(elapsed_time,errors_left):
     return int(1000*(errors_left/elapsed_time))
-
-def hiddenword_play():
-    global word_to_guess
-    global word_to_guess_display
-    if input_letter.lower() in word_to_guess:
-
-        word_to_guess_display=word_to_guess_display.replace()
 
 def get_all_index_to_replace():
     global word_to_guess
@@ -123,7 +111,7 @@ def play_again():
     global game_over
     global gamemode
     word_to_guess = list((random.choice(content)).lower()) #word to guess as a list
-    word_to_guess_display = list('_ '*len(word_to_guess)) #word to guess as a list
+    word_to_guess_display = list('_'*len(word_to_guess)) #word to guess as a list
     score=0
     errors=0
     time_left=0
@@ -132,11 +120,65 @@ def play_again():
 
 
 # #---------------------Pygame---------------------
-# pygame.init()
-# pygame.font.init()
-# pygame.display.set_caption("Hangman")
-# screen = pygame.display.set_mode((800, 600))
-# clock = pygame.time.Clock()
+pygame.init()
+pygame.font.init()
+pygame.display.set_caption("Hangman")
+screen = pygame.display.set_mode((800, 600))
+screen.fill(WHITE)
 
-# #---------------------Classes---------------------
+#---------------------Main Menu---------------------
 
+
+COMIC_SANS= pygame.font.SysFont('Comic Sans MS', 30)
+
+#Hard button
+hard_button_rect = pygame.Rect(650, 100, 120, 50)
+hard_button_text = COMIC_SANS.render("Hard", True, BLACK)
+hard_button_rect_center=hard_button_text.get_rect(center=hard_button_rect.center)
+#Medium button
+medium_button_rect = pygame.Rect(650, 200, 120, 50)
+medium_button_text = COMIC_SANS.render("Medium", True, BLACK)
+medium_button_rect_center=medium_button_text.get_rect(center=medium_button_rect.center)
+#Easy button
+easy_button_rect = pygame.Rect(650, 300, 120, 50)
+easy_button_text = COMIC_SANS.render("Easy", True, BLACK)
+easy_button_rect_center=easy_button_text.get_rect(center=easy_button_rect.center)
+#Exit button
+exit_button_rect = pygame.Rect(650, 400, 120, 50)
+exit_button_text = COMIC_SANS.render("Exit", True, WHITE)
+exit_button_rect_center=exit_button_text.get_rect(center=exit_button_rect.center)
+#Scoreboard button
+scoreboard_button_rect = pygame.Rect(300, 10, 160, 50)
+scoreboard_button_text = COMIC_SANS.render("Scoreboard", True, BLACK)
+scoreboard_button_rect_center=scoreboard_button_text.get_rect(center=scoreboard_button_rect.center)
+
+
+
+while running:
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+                running = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if exit_button_rect.collidepoint(event.pos):
+                running=False
+            if hard_button_rect.collidepoint(event.pos):
+                print("Hard Button is clicked")
+            if medium_button_rect.collidepoint(event.pos):
+                print("Medium Button is clicked")
+            if easy_button_rect.collidepoint(event.pos):
+                print("Easy Button is clicked")
+
+    pygame.draw.rect(screen,RED, hard_button_rect)
+    pygame.draw.rect(screen,BLUE, medium_button_rect)
+    pygame.draw.rect(screen,GREEN, easy_button_rect)
+    pygame.draw.rect(screen,BLACK, exit_button_rect)
+    pygame.draw.rect(screen,YELLOW, scoreboard_button_rect)
+    screen.blit(scoreboard_button_text,scoreboard_button_rect_center)
+    screen.blit(medium_button_text,medium_button_rect_center)
+    screen.blit(hard_button_text,hard_button_rect_center)
+    screen.blit(easy_button_text,easy_button_rect_center)
+    screen.blit(exit_button_text,exit_button_rect_center)
+    pygame.display.flip()
+
+pygame.quit()

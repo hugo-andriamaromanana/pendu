@@ -1,24 +1,24 @@
-input_letter='a'
-word_to_guess=list('anaconda')
-word_to_guess_display = list('_'*len(word_to_guess))
+import pygame
 
-def get_all_index_to_replace():
-    global word_to_guess
-    if input_letter in word_to_guess:
-        count=0
-        index_arr=[]
-        for i in word_to_guess:
-            if i == input_letter:
-                index_arr.append(count)
-            count+=1
-        return index_arr
+pygame.init()
+screen = pygame.display.set_mode((800, 600))
 
-def display_matching_letters():
-    global word_to_guess_display
-    global input_letter
-    for i in get_all_index_to_replace():
-        word_to_guess_display[i]=input_letter
-    input_letter=''
+# Create a rectangle
+rect = pygame.Rect(100, 100, 150, 50)
 
-display_matching_letters()
-print(' '.join(word_to_guess_display))
+# Create a font object using "Comic Sans MS"
+comic_sans = pygame.font.SysFont('Comic Sans MS', 30)
+
+# Render the text
+text = comic_sans.render("My Text", True, (255, 255, 255))
+
+# Create a surface with the text
+text_rect = text.get_rect(center=rect.center)
+
+# Fill the rectangle with a color
+pygame.draw.rect(screen, (255, 0, 0), rect)
+
+# Blit the text surface to the screen
+screen.blit(text, text_rect)
+
+pygame.display.update()
