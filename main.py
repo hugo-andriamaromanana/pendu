@@ -3,6 +3,8 @@ import random
 import time
 import json
 import sys
+from pygame.locals import *
+
 #---------------------Setup---------------------
 
 #---------------------Importing Files-----------
@@ -27,6 +29,7 @@ GREEN=(0,255,0)
 BLUE=(0,0,255)
 YELLOW=(255,255,0)
 ORANGE=(255,165,0)
+PURPLE=(128,0,128)
 MODE={
     "Easy":{
         "MAX_TIME":180,
@@ -114,6 +117,10 @@ def get_3_best(dic):
         arr.append(f'{i} : {dic[i]}')
     return arr[:3]
 
+def eggman_display_every_1s():
+    pygame.time.set_timer(UPDATEEGGMANANIMATION, 1000)
+
+
 
 # #---------------------Pygame---------------------
 pygame.init()
@@ -122,10 +129,12 @@ pygame.display.set_caption("Hangman")
 screen = pygame.display.set_mode((1500, 600))
 screen.fill(WHITE)
 
+
 #---------------------Main Menu---------------------
 
 
 COMIC_SANS= pygame.font.SysFont('Comic Sans MS', 30)
+DISPLAYSURF = pygame.display.set_mode((800, 400))
 
 #Hard button
 hard_button_rect = pygame.Rect(650, 100, 200, 50)
@@ -155,16 +164,21 @@ scoreboard_popup_exit_button_rect = pygame.Rect(700,10, 50, 50)
 scoreboard_popup_exit_button_text = COMIC_SANS.render("X", True, WHITE)
 scoreboard_popup_exit_button_rect_center=scoreboard_popup_exit_button_text.get_rect(center=scoreboard_popup_exit_button_rect.center)
 #Title text
-# title_text_rect=pygame.Rect(0, 50, 800, 50)
 title_text = COMIC_SANS.render("Hangman: now on Windows XP!", True, BLACK)
 title_text_rect=title_text.get_rect(center=(400, 50))
-
+#Click Me! button
+click_me_button_rect = pygame.Rect(300, 500, 200, 50)
+click_me_button_text = COMIC_SANS.render("Click Me!", True, WHITE)
+click_me_button_rect_center=click_me_button_text.get_rect(center=click_me_button_rect.center)
 
             
 state="main_menu"
+sub_surface = [0, 0, 200, 200]
+UPDATEEGGMANANIMATION = USEREVENT+1
 
 def game_state(state):
     if state=="main_menu":
+        DISPLAYSURF.blit(pygame.image.load("hangman.png").subsurface(sub_surface),(200, 250))
         pygame.draw.rect(screen, BLACK, exit_button_rect)
         screen.blit(exit_button_text, exit_button_rect_center)
         pygame.draw.rect(screen, RED, hard_button_rect)
@@ -177,6 +191,8 @@ def game_state(state):
         screen.blit(scoreboard_button_text, scoreboard_button_rect_center)
         pygame.draw.rect(screen, GREEN, title_text_rect)
         screen.blit(title_text, title_text_rect)
+        pygame.draw.rect(screen, PURPLE, click_me_button_rect)
+        screen.blit(click_me_button_text, click_me_button_rect_center)
     elif state=="scoreboard":
         pygame.draw.rect(scoreboard_popup, RED, scoreboard_popup_exit_button_rect)
         scoreboard_popup.blit(scoreboard_popup_exit_button_text, scoreboard_popup_exit_button_rect_center)
@@ -196,14 +212,15 @@ def game_state(state):
         scoreboard_popup.blit(COMIC_SANS.render("3rd "+get_3_best(hard_scoreboard_data)[2], True, BLACK), (720, 400))
     # elif state=="hard":
 
-
-
+eggman_display_every_1s()
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             if state=="main_menu":
+                if click_me_button_rect.collidepoint(event.pos):
+                    sub_surface[0]=0
                 if exit_button_rect.collidepoint(event.pos):
                     running=False
                 elif hard_button_rect.collidepoint(event.pos):
@@ -217,6 +234,11 @@ while running:
             elif state=="scoreboard":
                 if scoreboard_popup_exit_button_rect.collidepoint(event.pos):
                     state="main_menu"
+        if event.type == UPDATEEGGMANANIMATION:
+            sub_surface[0]+=200
+            if sub_surface[0]>1201:
+                sub_surface[0]=0
+        
     screen.fill(WHITE)
     game_state(state)
     pygame.display.update()
