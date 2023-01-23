@@ -1,24 +1,44 @@
 import pygame
 
 pygame.init()
+
+# Create the main window
 screen = pygame.display.set_mode((800, 600))
 
-# Create a rectangle
-rect = pygame.Rect(100, 100, 150, 50)
+# Create a button
+button = pygame.draw.rect(screen, (255, 0, 0), (50, 50, 100, 50))
 
-# Create a font object using "Comic Sans MS"
-comic_sans = pygame.font.SysFont('Comic Sans MS', 30)
-
-# Render the text
-text = comic_sans.render("My Text", True, (255, 255, 255))
-
-# Create a surface with the text
-text_rect = text.get_rect(center=rect.center)
-
-# Fill the rectangle with a color
-pygame.draw.rect(screen, (255, 0, 0), rect)
-
-# Blit the text surface to the screen
+# Add text to the button
+font = pygame.font.Font(None, 30)
+text = font.render("Click me", True, (255, 255, 255))
+text_rect = text.get_rect(center=(75, 75))
 screen.blit(text, text_rect)
-
 pygame.display.update()
+
+# Create the pop-up window
+popup = pygame.display.set_mode((400, 300))
+popup.fill((255, 255, 255))
+
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            quit()
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            # Get the mouse position
+            pos = pygame.mouse.get_pos()
+            # Check if the button was clicked
+            if button.collidepoint(pos):
+                # Draw elements on the pop-up window
+                pygame.draw.rect(popup, (255, 0, 0), (50, 50, 100, 50))
+                text = font.render("OK", True, (255, 255, 255))
+                text_rect = text.get_rect(center=(200, 150))
+                popup.blit(text, text_rect)
+                pygame.display.update()
+                # Wait for the user to close the pop-up window
+                while True:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            quit()
+

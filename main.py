@@ -69,16 +69,6 @@ def sort_scoreboard_data_by_score():
     medium_scoreboard_data=dict(sorted(medium_scoreboard_data.items(), key=lambda x: x[1], reverse=True))
     hard_scoreboard_data=dict(sorted(hard_scoreboard_data.items(), key=lambda x: x[1], reverse=True))
 
-def scoreboardprint_sorted():
-    global easy_scoreboard
-    global medium_scoreboard
-    global hard_scoreboard
-    for i in easy_scoreboard_data:
-        easy_scoreboard+=i+" : "+str(easy_scoreboard_data[i])+" points"+"\n"
-    for i in medium_scoreboard_data:
-        medium_scoreboard+=i+" : "+str(medium_scoreboard_data[i])+" points"+"\n"
-    for i in hard_scoreboard_data:
-        hard_scoreboard+=i+" : "+str(hard_scoreboard_data[i])+" points"+"\n"
 
 def score_calculate(elapsed_time,errors_left):
     return int(1000*(errors_left/elapsed_time))
@@ -118,12 +108,18 @@ def play_again():
     game_over=False
     gamemode=""#current gamemode
 
+def get_3_best(dic):
+    arr=[]
+    for i in dic:
+        arr.append(f'{i} : {dic[i]}')
+    return arr[:3]
+
 
 # #---------------------Pygame---------------------
 pygame.init()
 pygame.font.init()
 pygame.display.set_caption("Hangman")
-screen = pygame.display.set_mode((800, 600))
+screen = pygame.display.set_mode((1500, 600))
 screen.fill(WHITE)
 
 #---------------------Main Menu---------------------
@@ -151,34 +147,66 @@ exit_button_rect_center=exit_button_text.get_rect(center=exit_button_rect.center
 scoreboard_button_rect = pygame.Rect(300, 10, 160, 50)
 scoreboard_button_text = COMIC_SANS.render("Scoreboard", True, BLACK)
 scoreboard_button_rect_center=scoreboard_button_text.get_rect(center=scoreboard_button_rect.center)
+#Scoreboard popup window
+scoreboard_popup=pygame.display.set_mode((1000, 650))
+scoreboard_popup.fill(WHITE)
+#Scoreboard popup window exit button
+scoreboard_popup_exit_button_rect = pygame.Rect(700,10, 50, 50)
+scoreboard_popup_exit_button_text = COMIC_SANS.render("X", True, WHITE)
+scoreboard_popup_exit_button_rect_center=scoreboard_popup_exit_button_text.get_rect(center=scoreboard_popup_exit_button_rect.center)
+            
+state="main_menu"
 
+def game_state(state):
+    if state=="main_menu":
+        pygame.draw.rect(screen, RED, exit_button_rect)
+        screen.blit(exit_button_text, exit_button_rect_center)
+        pygame.draw.rect(screen, GREEN, hard_button_rect)
+        screen.blit(hard_button_text, hard_button_rect_center)
+        pygame.draw.rect(screen, YELLOW, medium_button_rect)
+        screen.blit(medium_button_text, medium_button_rect_center)
+        pygame.draw.rect(screen, BLUE, easy_button_rect)
+        screen.blit(easy_button_text, easy_button_rect_center)
+        pygame.draw.rect(screen, BLACK, scoreboard_button_rect)
+        screen.blit(scoreboard_button_text, scoreboard_button_rect_center)
+    elif state=="scoreboard":
+        pygame.draw.rect(scoreboard_popup, RED, scoreboard_popup_exit_button_rect)
+        scoreboard_popup.blit(scoreboard_popup_exit_button_text, scoreboard_popup_exit_button_rect_center)
+        scoreboard_popup.blit(COMIC_SANS.render("SCOREBOARD", True, YELLOW), (400, 10))
+        scoreboard_popup.blit(COMIC_SANS.render("Easy", True, GREEN), (100, 100))
+        scoreboard_popup.blit(COMIC_SANS.render("Medium", True, BLUE), (450, 100))
+        scoreboard_popup.blit(COMIC_SANS.render("Hard", True, RED), (800, 100))
+        scoreboard_popup.blit(COMIC_SANS.render("1st "+get_3_best(easy_scoreboard_data)[0], True, BLACK), (20, 200))
+        scoreboard_popup.blit(COMIC_SANS.render("2nd "+get_3_best(easy_scoreboard_data)[1], True, BLACK), (20, 300))
+        scoreboard_popup.blit(COMIC_SANS.render("3rd "+get_3_best(easy_scoreboard_data)[2], True, BLACK), (20, 400))
+        scoreboard_popup.blit(COMIC_SANS.render("1st "+get_3_best(medium_scoreboard_data)[0], True, BLACK), (370, 200))
+        scoreboard_popup.blit(COMIC_SANS.render("2nd "+get_3_best(medium_scoreboard_data)[1], True, BLACK), (370, 300))
+        scoreboard_popup.blit(COMIC_SANS.render("3rd "+get_3_best(medium_scoreboard_data)[2], True, BLACK), (370, 400))
+        scoreboard_popup.blit(COMIC_SANS.render("1st "+get_3_best(hard_scoreboard_data)[0], True, BLACK), (720, 200))
+        scoreboard_popup.blit(COMIC_SANS.render("2nd "+get_3_best(hard_scoreboard_data)[1], True, BLACK), (720, 300))
+        scoreboard_popup.blit(COMIC_SANS.render("3rd "+get_3_best(hard_scoreboard_data)[2], True, BLACK), (720, 400))
 
 
 while running:
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-                running = False
+            running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if exit_button_rect.collidepoint(event.pos):
-                running=False
-            if hard_button_rect.collidepoint(event.pos):
-                print("Hard Button is clicked")
-            if medium_button_rect.collidepoint(event.pos):
-                print("Medium Button is clicked")
-            if easy_button_rect.collidepoint(event.pos):
-                print("Easy Button is clicked")
-
-    pygame.draw.rect(screen,RED, hard_button_rect)
-    pygame.draw.rect(screen,BLUE, medium_button_rect)
-    pygame.draw.rect(screen,GREEN, easy_button_rect)
-    pygame.draw.rect(screen,BLACK, exit_button_rect)
-    pygame.draw.rect(screen,YELLOW, scoreboard_button_rect)
-    screen.blit(scoreboard_button_text,scoreboard_button_rect_center)
-    screen.blit(medium_button_text,medium_button_rect_center)
-    screen.blit(hard_button_text,hard_button_rect_center)
-    screen.blit(easy_button_text,easy_button_rect_center)
-    screen.blit(exit_button_text,exit_button_rect_center)
-    pygame.display.flip()
-
+            if state=="main_menu":
+                if exit_button_rect.collidepoint(event.pos):
+                    running=False
+                elif hard_button_rect.collidepoint(event.pos):
+                    state="hard"
+                elif medium_button_rect.collidepoint(event.pos):
+                    state="medium"
+                elif easy_button_rect.collidepoint(event.pos):
+                    state="easy"
+                elif scoreboard_button_rect.collidepoint(event.pos):
+                    state="scoreboard"
+            elif state=="scoreboard":
+                if scoreboard_popup_exit_button_rect.collidepoint(event.pos):
+                    state="main_menu"
+    screen.fill(WHITE)
+    game_state(state)
+    pygame.display.update()
 pygame.quit()
