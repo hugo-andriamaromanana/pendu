@@ -58,6 +58,10 @@ title_text_rect=title_text.get_rect(center=(400, 50))
 click_me_button_rect = pygame.Rect(300, 500, 200, 50)
 click_me_button_text = COMIC_SANS.render("Click Me!", True, WHITE)
 click_me_button_rect_center=click_me_button_text.get_rect(center=click_me_button_rect.center)
+#easy button exit
+easy_button_exit_rect = pygame.Rect(650, 500, 200, 50)
+easy_button_exit_text = COMIC_SANS.render("X", True, WHITE)
+easy_button_exit_rect_center=easy_button_exit_text.get_rect(center=easy_button_exit_rect.center)
 
 
 #------------Game_window-------------------
@@ -116,6 +120,9 @@ def game_state(state):
         DISPLAYSURF.blit(COMIC_SANS.render("Score: "+str(game_vars['score']), True, BLACK), (500, 600))
         game_vars = game_time(game_vars)
     elif state=="easy":
+        #easy exit button
+        pygame.draw.rect(screen, RED, easy_button_exit_rect)
+        screen.blit(easy_button_exit_text, easy_button_exit_rect_center)
         DISPLAYSURF.blit(pygame.image.load("hangman.png").subsurface(game_vars["sub_surface"]),(200, 250))
         DISPLAYSURF.blit(COMIC_SANS.render("Difficulty = Easy", True, YELLOW), (400, 10))
         DISPLAYSURF.blit(COMIC_SANS.render("Guess the word!", True, GREEN), (400, 100))
@@ -150,18 +157,22 @@ while running:
                     start=time.time()
                     game_vars["word_to_guess"] = random.choice(content)
                     game_vars["word_to_guess_display"] = ["_"] * len(game_vars["word_to_guess"])
+                    if scoreboard_popup_exit_button_rect.collidepoint(event.pos):
+                        state="main_menu"
                 elif medium_button_rect.collidepoint(event.pos):
                     state="medium"
                     start=time.time()
                     game_vars["word_to_guess"] = random.choice(content)
                     game_vars["word_to_guess_display"] = ["_"] * len(game_vars["word_to_guess"])
+                    if scoreboard_popup_exit_button_rect.collidepoint(event.pos):
+                        state="main_menu"
                 elif easy_button_rect.collidepoint(event.pos):
                     state="easy"
+                    if easy_button_exit_rect.collidepoint(event.pos):
+                        state="main_menu"
                     start=time.time()
                     game_vars["word_to_guess"] = random.choice(content)
                     game_vars["word_to_guess_display"] = ["_"] * len(game_vars["word_to_guess"])
-                elif lives==0:
-                    message = COMIC_SANS.render("Out of lives! Maybe try something easier?", True, (255, 255, 255))
                 elif scoreboard_button_rect.collidepoint(event.pos):
                     state="scoreboard"
             elif state=="scoreboard":

@@ -35,23 +35,16 @@ def sort_score_board(scoreboard):
 input_letter=''
 word_to_guess = list((random.choice(content)).lower()) #word to guess as a list
 word_to_guess_display = list('_'*len(word_to_guess)) #word to guess as a list
-easy_scoreboard=""
-medium_scoreboard=""
-hard_scoreboard=""
 game_over=False
 easy_scoreboard_data=sort_score_board(scoreboard[([i for i in scoreboard])[0]])
 medium_scoreboard_data=sort_score_board(scoreboard[([i for i in scoreboard])[1]])
 hard_scoreboard_data = sort_score_board(scoreboard[([i for i in scoreboard])[2]])
-
 running=True
 state="main_menu"
 sub_surface = [0, 0, 200, 200]
 UPDATEEGGMANANIMATION = USEREVENT+1
 confetti_list=[]
 start = time.time()
-used_keys=[]
-score=0
-lives = 6
 
 #---------------------Functions----------------------------
 def score_calculate(elapsed_time,errors_left):
@@ -102,7 +95,6 @@ def parse_time(time):
     minutes = int(time / 60)
     seconds = int(time % 60)
     return f"{minutes}m {seconds}s"
-
 
 def game_time(game_vars): 
     global score
