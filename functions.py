@@ -3,7 +3,16 @@ import random
 import json
 from pygame.locals import *
 import time
-
+#---------------------Colors---------------------
+BLACK=(0,0,0)
+WHITE=(255,255,255)
+RED=(255,0,0)
+GREEN=(0,255,0)
+BLUE=(0,0,255)
+YELLOW=(255,255,0)
+ORANGE=(255,165,0)
+PURPLE=(128,0,128)
+PINK=(255,192,203)
 #---------------------Importing txt-----------
 f = open('mots.txt', 'r')
 content = f.read()
@@ -16,28 +25,6 @@ with open("scoreboard.json","r") as f:
     scoreboard = json.load(f)
 
 #---------------------Constantes---------------------
-BLACK=(0,0,0)
-WHITE=(255,255,255)
-RED=(255,0,0)
-GREEN=(0,255,0)
-BLUE=(0,0,255)
-YELLOW=(255,255,0)
-ORANGE=(255,165,0)
-PURPLE=(128,0,128)
-MODE={
-    "Easy":{
-        "MAX_TIME":180,
-        "MAX_ERRORS":6
-    },
-    "Medium":{
-        "MAX_TIME":120,
-        "MAX_ERRORS":4
-    },
-    "Hard":{
-        "MAX_TIME":60,
-        "MAX_ERRORS":2
-    }
-}
 
 AUTHORIZED_KEYS = "abcdefghijklmnopqrstuvwxyz"
 
@@ -118,11 +105,12 @@ def parse_time(time):
 
 
 def game_time(game_vars): 
+    global score
     #win condition
     if "_" not in game_vars['word_to_guess_display']:
-        game_vars['score'] += 1 
-        game_vars['used_keys'] = []
-        game_vars['sub_surface'] = [0, 0, 200, 200]
+        print('bruh')
+        game_vars['score'] += 1
+        game_vars=reset_game_vars(game_vars)
     for event in pygame.event.get():
         if event.type == KEYDOWN:
             print(event.unicode)
@@ -136,4 +124,19 @@ def game_time(game_vars):
             else:
                 game_vars['lives'] -= 1
                 game_vars['sub_surface'][0] += 200
+    return game_vars
+
+def check_loose(game_vars):
+    if game_vars['lives'] <= 0:
+        return True
+    return False
+
+def reset_game_vars(game_vars):
+    word_to_guess = list(random.choice(content).lower())
+    game_vars['word_to_guess']= word_to_guess
+    game_vars['word_to_guess_display']=['_' for i in word_to_guess]
+    game_vars['used_keys']=[]
+    game_vars['lives']=6
+    game_vars['time']=0
+    game_vars['sub_surface']=[0, 0, 200, 200]
     return game_vars
