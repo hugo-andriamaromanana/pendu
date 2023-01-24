@@ -10,8 +10,8 @@ content = f.read()
 content = content.split('\n')
 content=content[:-1]
 content = [i.lower() for i in content]
-#---------------------Importing Json-----------
 
+#---------------------Importing Json-----------
 with open("scoreboard.json","r") as f:
     scoreboard = json.load(f)
 
@@ -38,7 +38,12 @@ MODE={
         "MAX_ERRORS":2
     }
 }
+
 AUTHORIZED_KEYS = "abcdefghijklmnopqrstuvwxyz"
+
+def sort_score_board(scoreboard):
+    return dict(sorted(scoreboard.items(), key=lambda x: x[1], reverse=True))
+
 #---------------------Variables---------------------
 input_letter=''
 word_to_guess = list((random.choice(content)).lower()) #word to guess as a list
@@ -47,9 +52,10 @@ easy_scoreboard=""
 medium_scoreboard=""
 hard_scoreboard=""
 game_over=False
-easy_scoreboard_data=scoreboard[([i for i in scoreboard])[0]]
-medium_scoreboard_data=scoreboard[([i for i in scoreboard])[1]]
-hard_scoreboard_data=scoreboard[([i for i in scoreboard])[2]]
+easy_scoreboard_data=sort_score_board(scoreboard[([i for i in scoreboard])[0]])
+medium_scoreboard_data=sort_score_board(scoreboard[([i for i in scoreboard])[1]])
+hard_scoreboard_data = sort_score_board(scoreboard[([i for i in scoreboard])[2]])
+
 running=True
 state="main_menu"
 sub_surface = [0, 0, 200, 200]
@@ -59,16 +65,8 @@ start = time.time()
 used_keys=[]
 score=0
 lives = 6
+
 #---------------------Functions----------------------------
-
-def sort_scoreboard_data_by_score():
-    global easy_scoreboard_data
-    global medium_scoreboard_data
-    global hard_scoreboard_data
-    easy_scoreboard_data=dict(sorted(easy_scoreboard_data.items(), key=lambda x: x[1], reverse=True))
-    medium_scoreboard_data=dict(sorted(medium_scoreboard_data.items(), key=lambda x: x[1], reverse=True))
-    hard_scoreboard_data=dict(sorted(hard_scoreboard_data.items(), key=lambda x: x[1], reverse=True))
-
 def score_calculate(elapsed_time,errors_left):
     return int(1000*(errors_left/elapsed_time))
 
@@ -90,20 +88,6 @@ def display_matching_letters():
     for i in get_all_index_to_replace():
         word_to_guess_display[i]=input_letter
     input_letter=''
-
-def play_again():
-    global word_to_guess
-    global word_to_guess_display
-    global score
-    global errors
-    global time_left
-    global game_over
-    word_to_guess = list((random.choice(content)).lower()) #word to guess as a list
-    word_to_guess_display = list('_'*len(word_to_guess)) #word to guess as a list
-    score=0
-    errors=0
-    time_left=0
-    game_over=False
 
 def get_3_best(dic):
     arr=[]
@@ -132,27 +116,24 @@ def parse_time(time):
     seconds = int(time % 60)
     return f"{minutes}m {seconds}s"
 
-# def game_time():
-#     global lives
-#     global used_keys
-#     global sub_surface
-#     global score
-#     global word_to_guess_display
-#     global word_to_guess
-#     while lives > 0:
-#         if "_" not in word_to_guess_display:
-#             score += 1 
-#             used_keys = []
-#             sub_surface = [0, 0, 200, 200]
-#         for event in pygame.event.get():
-#             if event.type == KEYDOWN:
-#                 if event.unicode in used_keys or event.unicode not in AUTHORIZED_KEYS or event.unicode == "":
-#                     continue
-#             used_keys.append(event.unicode)
-#             if event.unicode in word_to_guess:
-#                 for i in range(len(word_to_guess)):
-#                     if word_to_guess[i] == event.unicode:
-#                         word_to_guess_display[i] = event.unicode
-#             else:
-#                 lives -= 1
-#                 sub_surface[0] += 200
+
+def game_time(game_vars): 
+    #win condition
+    if "_" not in game_vars['word_to_guess_display']:
+        game_vars['score'] += 1 
+        game_vars['used_keys'] = []
+        game_vars['sub_surface'] = [0, 0, 200, 200]
+    for event in pygame.event.get():
+        if event.type == KEYDOWN:
+            print(event.unicode)
+            if event.unicode in game_vars["used_keys"] or event.unicode not in AUTHORIZED_KEYS or event.unicode == "":
+                continue
+            game_vars['used_keys'].append(event.unicode)
+            if event.unicode in game_vars['word_to_guess']:
+                for i in range(len(game_vars['word_to_guess'])):
+                    if game_vars['word_to_guess'][i] == event.unicode:
+                        game_vars['word_to_guess_display'][i] = event.unicode
+            else:
+                game_vars['lives'] -= 1
+                game_vars['sub_surface'][0] += 200
+    return game_vars

@@ -2,20 +2,25 @@ import pygame
 from pygame.locals import *
 from functions import *
 
-# #---------------------Pygame---------------------
+#---------------------Pygame---------------------
 pygame.init()
 pygame.font.init()
 pygame.display.set_caption("Hangman")
 screen = pygame.display.set_mode((1500, 600))
 screen.fill(WHITE)
 
-
-
 #---------------------Main Menu---------------------
-
-
 COMIC_SANS= pygame.font.SysFont('Comic Sans MS', 30)
 DISPLAYSURF = pygame.display.set_mode((800, 400))
+
+game_vars = {
+    "lives": 6,
+    "used_keys": [],
+    "sub_surface" : [0,0,200,200],
+    "score": 0,
+    "word_to_guess_display": [],
+    "word_to_guess" : [],
+}
 
 #Hard button
 hard_button_rect = pygame.Rect(650, 100, 200, 50)
@@ -51,11 +56,11 @@ title_text_rect=title_text.get_rect(center=(400, 50))
 click_me_button_rect = pygame.Rect(300, 500, 200, 50)
 click_me_button_text = COMIC_SANS.render("Click Me!", True, WHITE)
 click_me_button_rect_center=click_me_button_text.get_rect(center=click_me_button_rect.center)
+
+
 #------------Game_window-------------------
-
-
-
 def game_state(state):
+    global game_vars
     if state=="main_menu":
         DISPLAYSURF.blit(pygame.image.load("hangman.png").subsurface(sub_surface),(200, 250))
         pygame.draw.rect(screen, BLACK, exit_button_rect)
@@ -89,23 +94,36 @@ def game_state(state):
         scoreboard_popup.blit(COMIC_SANS.render("2nd "+get_3_best(hard_scoreboard_data)[1], True, BLACK), (720, 300))
         scoreboard_popup.blit(COMIC_SANS.render("3rd "+get_3_best(hard_scoreboard_data)[2], True, BLACK), (720, 400))
     elif state=="hard":
-        # game_time()
-        sub_surface[0]=0
-        DISPLAYSURF.blit(pygame.image.load("hangman.png").subsurface(sub_surface),(200, 250))
+        DISPLAYSURF.blit(pygame.image.load("hangman.png").subsurface(game_vars["sub_surface"]),(200, 250))
         DISPLAYSURF.blit(COMIC_SANS.render("Difficulty = HARD", True, RED), (400, 10))
         DISPLAYSURF.blit(COMIC_SANS.render("Guess the word!", True, GREEN), (400, 100))
-        DISPLAYSURF.blit(COMIC_SANS.render(' '.join(word_to_guess_display), True, BLACK), (500, 400))
-        DISPLAYSURF.blit(COMIC_SANS.render("Guesses left: "+str(lives), True, BLACK), (100, 500))
+        DISPLAYSURF.blit(COMIC_SANS.render(' '.join(game_vars['word_to_guess_display']), True, BLACK), (500, 400))
+        DISPLAYSURF.blit(COMIC_SANS.render("Guesses left: "+str(game_vars['lives']), True, BLACK), (100, 500))
         DISPLAYSURF.blit(COMIC_SANS.render("Time : " + parse_time(time.time() - start), True, (0, 0, 0)), (500, 500))
-        DISPLAYSURF.blit(COMIC_SANS.render("Letters used: "+", ".join(used_keys), True, BLACK), (100, 600))
+        DISPLAYSURF.blit(COMIC_SANS.render("Letters used: "+", ".join(game_vars['used_keys']), True, BLACK), (100, 600))
         DISPLAYSURF.blit(COMIC_SANS.render("Score: "+str(score), True, BLACK), (500, 600))
-        # game_time()
+        game_vars = game_time(game_vars)
+def check_loose(game_vars):
+    if game_vars['lives'] <= 0:
+        return True
+    return False
 
-
+def reset_game_vars():
+    word_to_guess = list(random.choice(content).lower())
+    return {
+        'word_to_guess': word_to_guess,
+        'word_to_guess_display': ['_' for i in word_to_guess],
+        'used_keys': [],
+        'lives': 6,
+        'time': 0,
+        'sub_surface': [0, 0, 200, 200]
+    }
 
 eggman_display_every_1s()
-sort_scoreboard_data_by_score()
 while running:
+    if check_loose(game_vars):
+        game_vars=reset_game_vars()
+        state="main_menu"
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -122,19 +140,26 @@ while running:
                     running=False
                 elif hard_button_rect.collidepoint(event.pos):
                     state="hard"
+                    start=time.time()
+                    game_vars["word_to_guess"] = random.choice(content)
+                    game_vars["word_to_guess_display"] = ["_"] * len(game_vars["word_to_guess"])
                 elif medium_button_rect.collidepoint(event.pos):
                     state="medium"
+                    start=time.time()
                 elif easy_button_rect.collidepoint(event.pos):
                     state="easy"
+                    start=time.time()
                 elif scoreboard_button_rect.collidepoint(event.pos):
                     state="scoreboard"
             elif state=="scoreboard":
                 if scoreboard_popup_exit_button_rect.collidepoint(event.pos):
                     state="main_menu"
-        
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                state="main_menu"
         if event.type == UPDATEEGGMANANIMATION and state=="main_menu":
             sub_surface[0]+=200
-            if sub_surface[0]>1201:
+            if sub_surface[0]>1201: 
                 sub_surface[0]=0
         
     screen.fill(WHITE)
