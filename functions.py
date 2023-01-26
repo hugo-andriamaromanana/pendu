@@ -13,6 +13,8 @@ YELLOW=(255,255,0)
 ORANGE=(255,165,0)
 PURPLE=(128,0,128)
 PINK=(255,192,203)
+LIGHT_BLUE=(173,216,230)
+CLEAR_BLUE=(0,191,255)
 #---------------------Importing txt-----------
 f = open('mots.txt', 'r')
 content = f.read()
@@ -55,8 +57,8 @@ SCORE_COEF={
 #---------------------Functions----------------------------
 
 #Will calculate the score, according to the time spent and the difficulty
-def score_calculate(score,time_spent,SCORE_COEF):
-    return int((score/time_spent)*SCORE_COEF[state])
+def score_calculate(points,time_score,mode):
+    return int((points/time_score)*mode)
 
 # print(score_calculate(5,500))
 
@@ -67,7 +69,7 @@ def get_3_best(dic):
     return arr[:3]
 
 def eggman_display_every_1s():
-    pygame.time.set_timer(UPDATEEGGMANANIMATION, 1000)
+    pygame.time.set_timer(UPDATEEGGMANANIMATION, 800)
 
 # def confetti_time():
 #     for i in range(50):
@@ -79,8 +81,8 @@ def eggman_display_every_1s():
 #         confetti_list.append([pygame.Rect(x, y, width, height), confetti_color])
 
 def parse_subsurface(x, y, width, height, lives):
-    SQAUARE_SIZE = 200
-    return [x + SQAUARE_SIZE * (lives - 1), y, width, height]
+    SQUARE_SIZE = 200
+    return [x + SQUARE_SIZE * (lives - 1), y, width, height]
 
 def parse_time(time):
     minutes = int(time / 60)
@@ -88,7 +90,6 @@ def parse_time(time):
     return f"{minutes}m {seconds}s"
 
 def game_time(game_vars): 
-    global score
     #win condition
     if "_" not in game_vars['word_to_guess_display']:
         game_vars['score'] += 1
