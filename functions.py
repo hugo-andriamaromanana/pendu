@@ -46,9 +46,19 @@ UPDATEEGGMANANIMATION = USEREVENT+1
 confetti_list=[]
 start = time.time()
 
+SCORE_COEF={
+    "easy":10**4,
+    "medium":10**5,
+    "hard":10**6
+}
+
 #---------------------Functions----------------------------
-def score_calculate(elapsed_time,errors_left):
-    return int(1000*(errors_left/elapsed_time))
+
+#Will calculate the score, according to the time spent and the difficulty
+def score_calculate(score,time_spent,SCORE_COEF):
+    return int((score/time_spent)*SCORE_COEF[state])
+
+# print(score_calculate(5,500))
 
 def get_3_best(dic):
     arr=[]
@@ -59,14 +69,14 @@ def get_3_best(dic):
 def eggman_display_every_1s():
     pygame.time.set_timer(UPDATEEGGMANANIMATION, 1000)
 
-def confetti_time():
-    for i in range(50):
-        x = random.randint(0, 700)
-        y = random.randint(0, 500)
-        width = random.randint(5, 20)
-        height = random.randint(5, 20)
-        confetti_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        confetti_list.append([pygame.Rect(x, y, width, height), confetti_color])
+# def confetti_time():
+#     for i in range(50):
+#         x = random.randint(0, 700)
+#         y = random.randint(0, 500)
+#         width = random.randint(5, 20)
+#         height = random.randint(5, 20)
+#         confetti_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+#         confetti_list.append([pygame.Rect(x, y, width, height), confetti_color])
 
 def parse_subsurface(x, y, width, height, lives):
     SQAUARE_SIZE = 200
@@ -81,7 +91,6 @@ def game_time(game_vars):
     global score
     #win condition
     if "_" not in game_vars['word_to_guess_display']:
-        print('bruh')
         game_vars['score'] += 1
         game_vars=reset_game_vars(game_vars)
     for event in pygame.event.get():
@@ -90,7 +99,6 @@ def game_time(game_vars):
                 continue
             if event.unicode not in game_vars['word_to_guess']:
                 game_vars['used_keys'].append(event.unicode)
-            print(game_vars["used_keys"])
             if event.unicode in game_vars['word_to_guess']:
                 for i in range(len(game_vars['word_to_guess'])):
                     if game_vars['word_to_guess'][i] == event.unicode:

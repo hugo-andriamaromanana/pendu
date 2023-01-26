@@ -14,6 +14,7 @@ screen.fill(WHITE)
 
 COMIC_SANS= pygame.font.SysFont('Comic Sans MS', 30)
 DISPLAYSURF = pygame.display.set_mode((800, 400))
+count_for_end_message=0
 
 game_vars = {
     "lives": 6,
@@ -22,6 +23,19 @@ game_vars = {
     "word_to_guess" : random.choice(content),
     "word_to_guess_display":["_"] * len(random.choice(content)),
     "score":0
+}
+end_messages={
+    0:"Good Luck!",
+    1: "Better luck next time!",
+    2: "Try something else!",
+    3: "Keep on going!",
+    4: "You can do better!",
+    5: "I'm losing faith in you!",
+    6: "You're not even trying!",
+    7: "?????????????????????????",
+    8: "You're a disgrace to humanity!",
+    9: "Your parents wasted their time on you!",
+    10: "You are done. Fired"
 }
 
 #Hard button
@@ -62,12 +76,18 @@ click_me_button_rect_center=click_me_button_text.get_rect(center=click_me_button
 easy_button_exit_rect = pygame.Rect(650, 500, 200, 50)
 easy_button_exit_text = COMIC_SANS.render("X", True, WHITE)
 easy_button_exit_rect_center=easy_button_exit_text.get_rect(center=easy_button_exit_rect.center)
+#Title better luck next time
+title_better_luck_next_time_rect = pygame.Rect(50, 590, 900, 50)
+title_better_luck_next_time_text = COMIC_SANS.render(end_messages[count_for_end_message], True, BLACK)
+title_better_luck_next_time_rect_center=title_better_luck_next_time_text.get_rect(center=title_better_luck_next_time_rect.center)
 
 
 #------------Game_window-------------------
 def game_state(state):
     global game_vars
     if state=="main_menu":
+        pygame.draw.rect(screen, PINK, title_better_luck_next_time_rect)
+        screen.blit(title_better_luck_next_time_text, title_better_luck_next_time_rect_center)
         DISPLAYSURF.blit(pygame.image.load("hangman.png").subsurface(sub_surface),(200, 250))
         pygame.draw.rect(screen, BLACK, exit_button_rect)
         screen.blit(exit_button_text, exit_button_rect_center)
@@ -83,6 +103,7 @@ def game_state(state):
         screen.blit(title_text, title_text_rect)
         pygame.draw.rect(screen, PURPLE, click_me_button_rect)
         screen.blit(click_me_button_text, click_me_button_rect_center)
+
     elif state=="scoreboard":
         pygame.draw.rect(scoreboard_popup, RED, scoreboard_popup_exit_button_rect)
         scoreboard_popup.blit(scoreboard_popup_exit_button_text, scoreboard_popup_exit_button_rect_center)
@@ -136,6 +157,12 @@ def game_state(state):
 eggman_display_every_1s()
 while running:
     if check_loose(game_vars):
+        if count_for_end_message==11:
+            running=False
+        count_for_end_message+=1
+        title_better_luck_next_time_rect = pygame.Rect(50, 590, 900, 50)
+        title_better_luck_next_time_text = COMIC_SANS.render(end_messages[count_for_end_message], True, BLACK)
+        title_better_luck_next_time_rect_center=title_better_luck_next_time_text.get_rect(center=title_better_luck_next_time_rect.center)
         game_vars=reset_game_vars(game_vars)
         state="main_menu"
     for event in pygame.event.get():
@@ -143,13 +170,13 @@ while running:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             if state=="main_menu":
-                if click_me_button_rect.collidepoint(event.pos):
-                    screen.fill((255, 255, 255))
-                    confetti_time()
-                    for confetti in confetti_list:
-                        confetti[0].y += 1
-                    for confetti in confetti_list:
-                        pygame.draw.rect(screen, confetti[1], confetti[0])
+                # if click_me_button_rect.collidepoint(event.pos):
+                #     screen.fill((255, 255, 255))
+                #     confetti_time()
+                #     for confetti in confetti_list:
+                #         confetti[0].y += 1
+                #     for confetti in confetti_list:
+                #         pygame.draw.rect(screen, confetti[1], confetti[0])
                 if exit_button_rect.collidepoint(event.pos):
                     running=False
                 elif hard_button_rect.collidepoint(event.pos):
