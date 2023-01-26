@@ -50,25 +50,6 @@ start = time.time()
 def score_calculate(elapsed_time,errors_left):
     return int(1000*(errors_left/elapsed_time))
 
-def get_all_index_to_replace():
-    global word_to_guess
-    global input_letter
-    if input_letter in word_to_guess:
-        index_arr=[]
-        count=0
-        for i in word_to_guess:
-            if i == input_letter:
-                index_arr.append(count)
-            count+=1
-    return index_arr
-
-def display_matching_letters():
-    global word_to_guess_display
-    global input_letter
-    for i in get_all_index_to_replace():
-        word_to_guess_display[i]=input_letter
-    input_letter=''
-
 def get_3_best(dic):
     arr=[]
     for i in dic:
@@ -105,10 +86,11 @@ def game_time(game_vars):
         game_vars=reset_game_vars(game_vars)
     for event in pygame.event.get():
         if event.type == KEYDOWN:
-            print(event.unicode)
             if event.unicode in game_vars["used_keys"] or event.unicode not in AUTHORIZED_KEYS or event.unicode == "":
                 continue
-            game_vars['used_keys'].append(event.unicode)
+            if event.unicode not in game_vars['word_to_guess']:
+                game_vars['used_keys'].append(event.unicode)
+            print(game_vars["used_keys"])
             if event.unicode in game_vars['word_to_guess']:
                 for i in range(len(game_vars['word_to_guess'])):
                     if game_vars['word_to_guess'][i] == event.unicode:
