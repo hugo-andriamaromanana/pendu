@@ -39,7 +39,7 @@ end_messages={
     9: "Your parents wasted their time on you!",
     10: "You are done. Fired",
     420: "",
-    69:"Please, Enter a username"
+    69:"Please, Enter a username and press ENTER"
 }
 text_input_box = pygame.Rect(100, 100, 140, 32)
 color_inactive = BLACK
