@@ -237,7 +237,6 @@ while running:
                     visual_text[len(text_input_output)]=event.unicode
                 if len(text_input_output) >6:
                     text_input_output=text_input_output[:-1]
-                    print('visual_text (AFTER ADD): ',visual_text)
                 input_name_box_text = COMIC_SANS.render('Please enter your name: '+(' '.join(visual_text)), True, BLACK)
                 if event.key == pygame.K_RETURN:
                     user_set=True
@@ -246,14 +245,10 @@ while running:
                     def_user=input_name
                     input_name_box_text = pygame.font.SysFont('Comic Sans MS', 30).render(('Welcome to Hangman '+''.join(def_user))+'!', True, BLACK)
                 elif event.key == pygame.K_BACKSPACE:
-                    print('visual_text (BEFORE DEL): ',visual_text)
                     visual_text=list((''.join(visual_text)).replace('\x08','_'))
-                    print('visual_text (BEFORE TWEEK): ',visual_text)
                     visual_text[len(text_input_output)-1]='_'
-                    print('visual_text (AFTER TWEEK): ',visual_text)  
                     input_name_box_text = COMIC_SANS.render('Please enter your name: '+(' '.join(visual_text)), True, BLACK)
                     text_input_output = text_input_output[:-1]
-                    print('text_input_output (AFTER DEL): ',text_input_output)
                 else:
                     text_input_output += event.unicode
             pygame.display.update()
