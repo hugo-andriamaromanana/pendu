@@ -176,7 +176,6 @@ while running:
             scoreboard[state][def_user]=int(score_calculate(game_vars['score'],int(time.time()-start),SCORE_COEF[state]))
             count_for_end_message=420
             end_messages[count_for_end_message]=f'Congrats, check the {state} leaderboard!'
-            print(scoreboard[state])
             state="main_menu"
         if count_for_end_message==11:
             running=False
@@ -197,6 +196,7 @@ while running:
                     input_name_box_text = COMIC_SANS.render('Please enter your name: '+(' '.join(input_name)), True, BLACK)
                     text_input_output=''
                     visual_text=['_']*6
+                    def_user=''
                 else:
                     active = False
                 color = color_active if active else color_inactive
