@@ -2,7 +2,6 @@ import pygame
 from pygame.locals import *
 from functions import *
 import random
-
 #---------------------Pygame---------------------
 pygame.init()
 pygame.font.init()
@@ -12,7 +11,6 @@ pygame.mixer.init()
 pygame.display.set_caption("Hangman")
 screen = pygame.display.set_mode((1500, 600))
 screen.fill(WHITE)
-
 #---------------------Main Menu---------------------
 COMIC_SANS= pygame.font.SysFont('Comic Sans MS', 30)
 DISPLAYSURF = pygame.display.set_mode((800, 400))
@@ -47,8 +45,9 @@ color_active = RED
 color = color_inactive
 user_set=False
 active = False
-temp_text=['_']*6
+visual_text=['_']*6
 text_input_output = ''
+def_user=''
 #---------------------GUI--------------------------------------
 #Hard button
 hard_button_rect = pygame.Rect(650, 100, 200, 50)
@@ -80,10 +79,6 @@ scoreboard_popup_exit_button_rect_center=scoreboard_popup_exit_button_text.get_r
 #Title text
 title_text = COMIC_SANS.render("Hangman: now on Windows XP!", True, BLACK)
 title_text_rect=title_text.get_rect(center=(400, 50))
-#Input name Box
-input_name_box_rect = pygame.Rect(100, 95, 200, 30)
-input_name_box_text = COMIC_SANS.render((''.join(input_name)), True, BLACK)
-input_name_box_rect_center=input_name_box_text.get_rect(center=input_name_box_rect.center)
 #Click Me! button
 click_me_button_rect = pygame.Rect(300, 500, 200, 50)
 click_me_button_text = COMIC_SANS.render("Click Me!", True, WHITE)
@@ -96,13 +91,18 @@ easy_button_exit_rect_center=easy_button_exit_text.get_rect(center=easy_button_e
 title_better_luck_next_time_rect = pygame.Rect(50, 590, 900, 50)
 title_better_luck_next_time_text = COMIC_SANS.render(end_messages[count_for_end_message], True, BLACK)
 title_better_luck_next_time_rect_center=title_better_luck_next_time_text.get_rect(center=title_better_luck_next_time_rect.center)
+#Input name Box
+input_name_box_rect = pygame.Rect(50, 110, 450, 30)
+input_name_box_text = COMIC_SANS.render('Please enter your name: '+(' '.join(input_name)), True, BLACK)
+input_name_box_rect_center=input_name_box_text.get_rect(center=input_name_box_rect.center)
 #Input_box_text
 txt_surface= COMIC_SANS.render(text_input_output, BLACK, BLACK)
 width = max(200, txt_surface.get_rect().width+10)
 text_input_box.w = width
-
+text_input_center=txt_surface.get_rect(center=text_input_box.center)
 #------------Game_window-------------------
 def game_state(state):
+    global input_name
     global game_vars
     if state=="main_menu":
         pygame.draw.rect(screen, PINK, title_better_luck_next_time_rect)
@@ -122,13 +122,11 @@ def game_state(state):
         screen.blit(title_text, title_text_rect)
         pygame.draw.rect(screen, PURPLE, click_me_button_rect)
         screen.blit(click_me_button_text, click_me_button_rect_center)
+        if user_set==False:
+            pygame.draw.rect(screen, BLACK, (10, 100, 550, 50),1)
+            screen.blit(txt_surface, (text_input_center))
         pygame.draw.rect(screen, WHITE, input_name_box_rect)
         screen.blit(input_name_box_text, input_name_box_rect_center)
-        if text_input_output!=input_name:
-            pygame.draw.rect(screen, color, (100, 95, 200, 40), 1)
-            screen.blit(txt_surface, (text_input_box.x+5, text_input_box.y+5))
-
-
     elif state=="scoreboard":
         pygame.draw.rect(scoreboard_popup, RED, scoreboard_popup_exit_button_rect)
         scoreboard_popup.blit(scoreboard_popup_exit_button_text, scoreboard_popup_exit_button_rect_center)
@@ -145,7 +143,6 @@ def game_state(state):
         scoreboard_popup.blit(COMIC_SANS.render("1st "+get_3_best(hard_scoreboard_data)[0], True, BLACK), (720, 200))
         scoreboard_popup.blit(COMIC_SANS.render("2nd "+get_3_best(hard_scoreboard_data)[1], True, BLACK), (720, 300))
         scoreboard_popup.blit(COMIC_SANS.render("3rd "+get_3_best(hard_scoreboard_data)[2], True, BLACK), (720, 400))
-
     elif state=="hard":
         DISPLAYSURF.blit(pygame.image.load("hangman.png").subsurface(game_vars["sub_surface"]),(200, 250))
         DISPLAYSURF.blit(COMIC_SANS.render("Difficulty = HARD", True, RED), (400, 10))
@@ -176,12 +173,11 @@ def game_state(state):
         DISPLAYSURF.blit(COMIC_SANS.render("Letters used: "+", ".join(game_vars['used_keys']), True, BLACK), (100, 600))
         DISPLAYSURF.blit(COMIC_SANS.render("Score: "+str(game_vars['score']), True, BLACK), (500, 600))
         game_vars = game_time(game_vars)
-
 eggman_display_every_1s()
 while running:
     if check_loose(game_vars):
-        if int(score_calculate(game_vars['score'],int(time.time()-start),SCORE_COEF[state])) > int(hard_scoreboard_data[[i for i in hard_scoreboard_data][2]]):
-            scoreboard[state]["".join(input_name)]=int(score_calculate(game_vars['score'],int(time.time()-start),SCORE_COEF[state]))
+        # if int(score_calculate(game_vars['score'],int(time.time()-start),SCORE_COEF[state])) > int(hard_scoreboard_data[[i for i in hard_scoreboard_data][2]]):
+        #     scoreboard[state]["".join(input_name)]=int(score_calculate(game_vars['score'],int(time.time()-start),SCORE_COEF[state]))
         if count_for_end_message==11:
             running=False
         count_for_end_message+=1
@@ -196,8 +192,10 @@ while running:
             if state=="main_menu":
                 if text_input_box.collidepoint(event.pos):
                     active = not active
-                    input_name=['_ '*6]
-                    input_name_box_text = COMIC_SANS.render((''.join(input_name)), True, BLACK)
+                    input_name=['_']*6
+                    input_name_box_text = COMIC_SANS.render('Please enter your name: '+(' '.join(input_name)), True, BLACK)
+                    text_input_output=''
+                    visual_text=['_']*6
                 else:
                     active = False
                 color = color_active if active else color_inactive
@@ -231,41 +229,49 @@ while running:
                     state="main_menu"
         if event.type == pygame.KEYDOWN:
             if active:
-                input_name_box_text = pygame.font.SysFont('Comic Sans MS', 30).render((' '.join(temp_text)), True, BLACK)
+                input_name_box_text = COMIC_SANS.render('Please enter your name: '+(' '.join(visual_text)), True, BLACK)
                 if event.key == pygame.K_LSHIFT or event.key == pygame.K_RSHIFT:
                     continue
-                temp_text[len(text_input_output)]=event.unicode
-                input_name_box_text = pygame.font.SysFont('Comic Sans MS', 30).render(' '.join(temp_text), True, BLACK)
+                input_name_box_text = COMIC_SANS.render('Please enter your name: '+(' '.join(visual_text)), True, BLACK)
+                if len(text_input_output) < 6:
+                    visual_text[len(text_input_output)]=event.unicode
+                if len(text_input_output) >6:
+                    text_input_output=text_input_output[:-1]
+                    print('visual_text (AFTER ADD): ',visual_text)
+                input_name_box_text = COMIC_SANS.render('Please enter your name: '+(' '.join(visual_text)), True, BLACK)
                 if event.key == pygame.K_RETURN:
                     user_set=True
-                    input_name=text_input_output
-                    input_name_box_text = pygame.font.SysFont('Comic Sans MS', 30).render(('Welcome to Hangman '+''.join(input_name))+'!', True, BLACK)
+                    input_name=text_input_output[:6]
                     active = not active
+                    def_user=input_name
+                    input_name_box_text = pygame.font.SysFont('Comic Sans MS', 30).render(('Welcome to Hangman '+''.join(def_user))+'!', True, BLACK)
                 elif event.key == pygame.K_BACKSPACE:
-                    temp_text=list((''.join(temp_text)).replace('\x08','_'))
-                    temp_text[len(''.join(temp_text).replace('_',''))-1]='_'
-                    input_name_box_text = pygame.font.SysFont('Comic Sans MS', 30).render(' '.join(temp_text), True, BLACK)
+                    print('visual_text (BEFORE DEL): ',visual_text)
+                    visual_text=list((''.join(visual_text)).replace('\x08','_'))
+                    print('visual_text (BEFORE TWEEK): ',visual_text)
+                    visual_text[len(text_input_output)-1]='_'
+                    print('visual_text (AFTER TWEEK): ',visual_text)  
+                    input_name_box_text = COMIC_SANS.render('Please enter your name: '+(' '.join(visual_text)), True, BLACK)
                     text_input_output = text_input_output[:-1]
+                    print('text_input_output (AFTER DEL): ',text_input_output)
                 else:
                     text_input_output += event.unicode
+            pygame.display.update()
             if event.key == pygame.K_ESCAPE:
                 state="main_menu"
         if event.type == UPDATEEGGMANANIMATION and state=="main_menu":
             if not active:
                 if text_input_output == '':
                     if (count % 2 == 0):
-                        input_name=['_ '*6]
-                        input_name_box_text = COMIC_SANS.render((''.join(input_name)), True, BLACK)
+                        input_name_box_text = COMIC_SANS.render('Please enter your name: '+(' '.join(input_name)), True, BLACK)
                     else:
-                        input_name=['']
-                        input_name_box_text = COMIC_SANS.render((''.join(input_name)), True, BLACK)
+                        input_name_box_text = COMIC_SANS.render('Please enter your name: ', True, BLACK)
                     count += 1
             if count > 10:
                 count=0
             sub_surface[0]+=200
             if sub_surface[0]>1201: 
                 sub_surface[0]=0
-            
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False

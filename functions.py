@@ -22,18 +22,13 @@ content = f.read()
 content = content.split('\n')
 content=content[:-1]
 content = [i.lower() for i in content]
-
 #---------------------Importing Json-----------
 with open("scoreboard.json","r") as f:
     scoreboard = json.load(f)
-
 #---------------------Constantes---------------------
-
 AUTHORIZED_KEYS = "abcdefghijklmnopqrstuvwxyz"
-
 def sort_score_board(scoreboard):
     return dict(sorted(scoreboard.items(), key=lambda x: x[1], reverse=True))
-
 #---------------------Variables---------------------
 input_letter=''
 word_to_guess = list((random.choice(content)).lower()) #word to guess as a list
@@ -48,30 +43,22 @@ sub_surface = [0, 0, 200, 200]
 UPDATEEGGMANANIMATION = USEREVENT+1
 confetti_list=[]
 start = time.time()
-
 SCORE_COEF={
     "easy":10**4,
     "medium":10**5,
     "hard":10**6
 }
-
 #---------------------Functions----------------------------
-
 #Will calculate the score, according to the time spent and the difficulty
 def score_calculate(points,time_score,mode):
     return int((points/time_score)*mode)
-
-# print(score_calculate(5,500))
-
 def get_3_best(dic):
     arr=[]
     for i in dic:
         arr.append(f'{i} : {dic[i]}')
     return arr[:3]
-
 def eggman_display_every_1s():
     pygame.time.set_timer(UPDATEEGGMANANIMATION, 800)
-
 # def confetti_time():
 #     for i in range(50):
 #         x = random.randint(0, 700)
@@ -80,16 +67,13 @@ def eggman_display_every_1s():
 #         height = random.randint(5, 20)
 #         confetti_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 #         confetti_list.append([pygame.Rect(x, y, width, height), confetti_color])
-
 def parse_subsurface(x, y, width, height, lives):
     SQUARE_SIZE = 200
     return [x + SQUARE_SIZE * (lives - 1), y, width, height]
-
 def parse_time(time):
     minutes = int(time / 60)
     seconds = int(time % 60)
     return f"{minutes}m {seconds}s"
-
 def game_time(game_vars): 
     #win condition
     if "_" not in game_vars['word_to_guess_display']:
@@ -109,12 +93,10 @@ def game_time(game_vars):
                 game_vars['lives'] -= 1
                 game_vars['sub_surface'][0] += 200
     return game_vars
-
 def check_loose(game_vars):
     if game_vars['lives'] <= 0:
         return True
     return False
-
 def reset_game_vars(game_vars):
     word_to_guess = list(random.choice(content).lower())
     game_vars['word_to_guess']= word_to_guess
