@@ -34,9 +34,9 @@ input_letter=''
 word_to_guess = list((random.choice(content)).lower()) #word to guess as a list
 word_to_guess_display = list('_'*len(word_to_guess)) #word to guess as a list
 game_over=False
-easy_scoreboard_data=sort_score_board(scoreboard[([i for i in scoreboard])[0]])
-medium_scoreboard_data=sort_score_board(scoreboard[([i for i in scoreboard])[1]])
-hard_scoreboard_data = sort_score_board(scoreboard[([i for i in scoreboard])[2]])
+Easy_scoreboard_data=sort_score_board(scoreboard[([i for i in scoreboard])[0]])
+Medium_scoreboard_data=sort_score_board(scoreboard[([i for i in scoreboard])[1]])
+Hard_scoreboard_data = sort_score_board(scoreboard[([i for i in scoreboard])[2]])
 running=True
 state="main_menu"
 sub_surface = [0, 0, 200, 200]
@@ -44,9 +44,9 @@ UPDATEEGGMANANIMATION = USEREVENT+1
 confetti_list=[]
 start = time.time()
 SCORE_COEF={
-    "easy":10**4,
-    "medium":10**5,
-    "hard":10**6
+    "Easy":10**4,
+    "Medium":10**5,
+    "Hard":10**6
 }
 #---------------------Functions----------------------------
 #Will calculate the score, according to the time spent and the difficulty
