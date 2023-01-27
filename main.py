@@ -2,18 +2,16 @@ import pygame
 from pygame.locals import *
 from functions import *
 import random
-#---------------------Pygame---------------------
+#---------------------PYGAME---------------------
 pygame.init()
 pygame.font.init()
-pygame.mixer.init()
-# pygame.mixer.music.load("DOKI.mp3")
-# pygame.mixer.music.play(-1)
 pygame.display.set_caption("Hangman")
 screen = pygame.display.set_mode((1500, 600))
 screen.fill(WHITE)
-#---------------------Main Menu---------------------
+#---------------------CONST---------------------
 COMIC_SANS= pygame.font.SysFont('Comic Sans MS', 30)
 DISPLAYSURF = pygame.display.set_mode((800, 400))
+#---------------------VARS---------------------
 count_for_end_message=0
 levels = ["Easy", "Medium", "Hard"]
 positions = ["1st", "2nd", "3rd"]
@@ -52,7 +50,7 @@ active = False
 visual_text=['_']*6
 text_input_output = ''
 def_user=''
-#---------------------GUI--------------------------------------
+#---------------------GUI---------------------------
 #Hard button
 Hard_button_rect = pygame.Rect(650, 100, 200, 50)
 Hard_button_text = COMIC_SANS.render("Hard", True, BLACK)
@@ -170,18 +168,20 @@ def game_state(state):
         DISPLAYSURF.blit(COMIC_SANS.render("Letters used: "+", ".join(game_vars['used_keys']), True, BLACK), (100, 600))
         DISPLAYSURF.blit(COMIC_SANS.render("Score: "+str(game_vars['score']), True, BLACK), (500, 600))
         game_vars = game_time(game_vars)
+
 eggman_display_every_1s()
 while running:
     if check_loose(game_vars):
         if int(score_calculate(game_vars['score'],int(time.time()-start),SCORE_COEF[state])) > int(Hard_scoreboard_data[[i for i in Hard_scoreboard_data][2]]):
             scoreboard[state][def_user]=int(score_calculate(game_vars['score'],int(time.time()-start),SCORE_COEF[state]))
-            count_for_end_message=419
-            end_messages[count_for_end_message+1]=f'Congrats, check the {state} leaderboard!'
+            count_for_end_message=420
+            end_messages[count_for_end_message]=f'Congrats, check the {state} leaderboard!'
             print(scoreboard[state])
             state="main_menu"
         if count_for_end_message==11:
             running=False
-        count_for_end_message+=1
+        if game_vars['score']==0 and game_vars['lives']==0:
+            count_for_end_message+=1
         title_better_luck_next_time_text = COMIC_SANS.render(end_messages[count_for_end_message], True, BLACK)
         title_better_luck_next_time_rect_center=title_better_luck_next_time_text.get_rect(center=title_better_luck_next_time_rect.center)
         game_vars=reset_game_vars(game_vars)
