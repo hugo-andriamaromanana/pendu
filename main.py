@@ -45,6 +45,7 @@ text_input_box = pygame.Rect(100, 100, 140, 32)
 color_inactive = BLACK
 color_active = RED
 color = color_inactive
+user_set=False
 active = False
 temp_text=['_']*6
 text_input_output = ''
@@ -195,7 +196,8 @@ while running:
             if state=="main_menu":
                 if text_input_box.collidepoint(event.pos):
                     active = not active
-                    count=1
+                    input_name=['_ '*6]
+                    input_name_box_text = COMIC_SANS.render((''.join(input_name)), True, BLACK)
                 else:
                     active = False
                 color = color_active if active else color_inactive
@@ -230,9 +232,12 @@ while running:
         if event.type == pygame.KEYDOWN:
             if active:
                 input_name_box_text = pygame.font.SysFont('Comic Sans MS', 30).render((' '.join(temp_text)), True, BLACK)
+                if event.key == pygame.K_LSHIFT or event.key == pygame.K_RSHIFT:
+                    continue
                 temp_text[len(text_input_output)]=event.unicode
                 input_name_box_text = pygame.font.SysFont('Comic Sans MS', 30).render(' '.join(temp_text), True, BLACK)
                 if event.key == pygame.K_RETURN:
+                    user_set=True
                     input_name=text_input_output
                     input_name_box_text = pygame.font.SysFont('Comic Sans MS', 30).render(('Welcome to Hangman '+''.join(input_name))+'!', True, BLACK)
                     active = not active
