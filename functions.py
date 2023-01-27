@@ -26,7 +26,7 @@ content = [i.lower() for i in content]
 with open("scoreboard.json","r") as f:
     scoreboard = json.load(f)
 #---------------------Constantes---------------------
-AUTHORIZED_KEYS = "abcdefghijklmnopqrstuvwxyz"
+AUTHORIZED_KEYS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 def sort_score_board(scoreboard):
     return dict(sorted(scoreboard.items(), key=lambda x: x[1], reverse=True))
 #---------------------Variables---------------------
@@ -81,6 +81,7 @@ def game_time(game_vars):
         game_vars=reset_game_vars(game_vars)
     for event in pygame.event.get():
         if event.type == KEYDOWN:
+            print(event.unicode)
             if event.unicode in game_vars["used_keys"] or event.unicode not in AUTHORIZED_KEYS or event.unicode == "":
                 continue
             if event.unicode not in game_vars['word_to_guess']:
