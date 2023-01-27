@@ -207,31 +207,28 @@ while running:
                         count_for_end_message=69
                         title_better_luck_next_time_text = COMIC_SANS.render(end_messages[count_for_end_message], True, BLACK)
                         title_better_luck_next_time_rect_center=title_better_luck_next_time_text.get_rect(center=title_better_luck_next_time_rect.center)
+                        continue
                     state="Hard"
                     start=time.time()
                     game_vars["word_to_guess"] = random.choice(content)
                     game_vars["word_to_guess_display"] = ["_"] * len(game_vars["word_to_guess"])
-                    if scoreboard_popup_exit_button_rect.collidepoint(event.pos):
-                        state="main_menu"
                 elif Medium_button_rect.collidepoint(event.pos):
                     if def_user=='':
                         count_for_end_message=69
                         title_better_luck_next_time_text = COMIC_SANS.render(end_messages[count_for_end_message], True, BLACK)
                         title_better_luck_next_time_rect_center=title_better_luck_next_time_text.get_rect(center=title_better_luck_next_time_rect.center)
+                        continue
                     state="Medium"
                     start=time.time()
                     game_vars["word_to_guess"] = random.choice(content)
                     game_vars["word_to_guess_display"] = ["_"] * len(game_vars["word_to_guess"])
-                    if scoreboard_popup_exit_button_rect.collidepoint(event.pos):
-                        state="main_menu"
                 elif Easy_button_rect.collidepoint(event.pos):
-                    state="Easy"
                     if def_user=='':
                         count_for_end_message=69
                         title_better_luck_next_time_text = COMIC_SANS.render(end_messages[count_for_end_message], True, BLACK)
                         title_better_luck_next_time_rect_center=title_better_luck_next_time_text.get_rect(center=title_better_luck_next_time_rect.center)
-                    if Easy_button_exit_rect.collidepoint(event.pos):
-                        state="main_menu"
+                        continue
+                    state="Easy"
                     start=time.time()
                     game_vars["word_to_guess"] = random.choice(content)
                     game_vars["word_to_guess_display"] = ["_"] * len(game_vars["word_to_guess"])
