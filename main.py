@@ -34,7 +34,7 @@ end_messages={
     2: "Try something else!",
     3: "Keep on going!",
     4: "You can do better!",
-    5: "I'm losing faith in you!",
+    5: "I'm losing faith in you!",  
     6: "You're not even trying!",
     7: "?????????????????????????",
     8: "You're a disgrace to humanity!",
@@ -93,15 +93,13 @@ easy_button_exit_rect_center=easy_button_exit_text.get_rect(center=easy_button_e
 title_better_luck_next_time_rect = pygame.Rect(50, 590, 900, 50)
 title_better_luck_next_time_text = COMIC_SANS.render(end_messages[count_for_end_message], True, BLACK)
 title_better_luck_next_time_rect_center=title_better_luck_next_time_text.get_rect(center=title_better_luck_next_time_rect.center)
-#Input name Box
-input_name_box_rect = pygame.Rect(50, 110, 450, 30)
-input_name_box_text = COMIC_SANS.render('Please enter your name: '+(' '.join(input_name)), True, BLACK)
-input_name_box_rect_center=input_name_box_text.get_rect(center=input_name_box_rect.center)
 #Input_box_text
 txt_surface= COMIC_SANS.render(text_input_output, BLACK, BLACK)
-width = max(200, txt_surface.get_rect().width+10)
-text_input_box.w = width
 text_input_center=txt_surface.get_rect(center=text_input_box.center)
+#Input name Box
+input_name_box_rect = pygame.Rect(10, 100, 550, 50)
+input_name_box_text = COMIC_SANS.render('Please enter your name: '+(' '.join(input_name)), True, BLACK)
+input_name_box_rect_center=input_name_box_text.get_rect(center=input_name_box_rect.center)
 #------------Game_window-------------------
 def game_state(state):
     global input_name
@@ -124,9 +122,6 @@ def game_state(state):
         screen.blit(title_text, title_text_rect)
         pygame.draw.rect(screen, PURPLE, click_me_button_rect)
         screen.blit(click_me_button_text, click_me_button_rect_center)
-        if user_set==False:
-            pygame.draw.rect(screen, BLACK, (10, 100, 550, 50),1)
-            screen.blit(txt_surface, (text_input_center))
         pygame.draw.rect(screen, WHITE, input_name_box_rect)
         screen.blit(input_name_box_text, input_name_box_rect_center)
     elif state=="scoreboard":
@@ -190,7 +185,7 @@ while running:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             if state=="main_menu":
-                if text_input_box.collidepoint(event.pos):
+                if input_name_box_rect.collidepoint(event.pos):
                     active = not active
                     input_name=['_']*6
                     input_name_box_text = COMIC_SANS.render('Please enter your name: '+(' '.join(input_name)), True, BLACK)
