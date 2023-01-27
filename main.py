@@ -15,6 +15,8 @@ screen.fill(WHITE)
 COMIC_SANS= pygame.font.SysFont('Comic Sans MS', 30)
 DISPLAYSURF = pygame.display.set_mode((800, 400))
 count_for_end_message=0
+levels = ["easy", "medium", "hard"]
+positions = ["1st", "2nd", "3rd"]
 input_name=['_ '*6]
 time_spent=0
 count = 1
@@ -134,15 +136,13 @@ def game_state(state):
         scoreboard_popup.blit(COMIC_SANS.render("Easy", True, YELLOW), (100, 100))
         scoreboard_popup.blit(COMIC_SANS.render("Medium", True, ORANGE), (450, 100))
         scoreboard_popup.blit(COMIC_SANS.render("Hard", True, RED), (800, 100))
-        scoreboard_popup.blit(COMIC_SANS.render("1st "+get_3_best(easy_scoreboard_data)[0], True, BLACK), (20, 200))
-        scoreboard_popup.blit(COMIC_SANS.render("2nd "+get_3_best(easy_scoreboard_data)[1], True, BLACK), (20, 300))
-        scoreboard_popup.blit(COMIC_SANS.render("3rd "+get_3_best(easy_scoreboard_data)[2], True, BLACK), (20, 400))
-        scoreboard_popup.blit(COMIC_SANS.render("1st "+get_3_best(medium_scoreboard_data)[0], True, BLACK), (370, 200))
-        scoreboard_popup.blit(COMIC_SANS.render("2nd "+get_3_best(medium_scoreboard_data)[1], True, BLACK), (370, 300))
-        scoreboard_popup.blit(COMIC_SANS.render("3rd "+get_3_best(medium_scoreboard_data)[2], True, BLACK), (370, 400))
-        scoreboard_popup.blit(COMIC_SANS.render("1st "+get_3_best(hard_scoreboard_data)[0], True, BLACK), (720, 200))
-        scoreboard_popup.blit(COMIC_SANS.render("2nd "+get_3_best(hard_scoreboard_data)[1], True, BLACK), (720, 300))
-        scoreboard_popup.blit(COMIC_SANS.render("3rd "+get_3_best(hard_scoreboard_data)[2], True, BLACK), (720, 400))
+        for i, level in enumerate(levels):
+            scoreboard_data = eval(f"{level}_scoreboard_data")
+            x = 20 + 350 * i
+            for j, position in enumerate(positions):
+                y = 200 + 100 * j
+                text = f"{position} {get_3_best(scoreboard_data)[j]}"
+                scoreboard_popup.blit(COMIC_SANS.render(text, True, BLACK), (x, y))
     elif state=="hard":
         DISPLAYSURF.blit(pygame.image.load("hangman.png").subsurface(game_vars["sub_surface"]),(200, 250))
         DISPLAYSURF.blit(COMIC_SANS.render("Difficulty = HARD", True, RED), (400, 10))
