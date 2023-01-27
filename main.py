@@ -19,7 +19,7 @@ DISPLAYSURF = pygame.display.set_mode((800, 400))
 count_for_end_message=0
 input_name=['_ '*6]
 time_spent=0
-count = 0
+count = 1
 game_vars = {
     "lives": 6,
     "used_keys": [],
@@ -46,7 +46,7 @@ color_inactive = BLACK
 color_active = RED
 color = color_inactive
 active = False
-temp_text=['_']*7
+temp_text=['_']*6
 text_input_output = ''
 #---------------------GUI--------------------------------------
 #Hard button
@@ -124,7 +124,7 @@ def game_state(state):
         pygame.draw.rect(screen, WHITE, input_name_box_rect)
         screen.blit(input_name_box_text, input_name_box_rect_center)
         if text_input_output!=input_name:
-            pygame.draw.rect(screen, color, text_input_box, 2)
+            pygame.draw.rect(screen, color, (100, 95, 200, 40), 1)
             screen.blit(txt_surface, (text_input_box.x+5, text_input_box.y+5))
 
 
@@ -195,6 +195,7 @@ while running:
             if state=="main_menu":
                 if text_input_box.collidepoint(event.pos):
                     active = not active
+                    count=1
                 else:
                     active = False
                 color = color_active if active else color_inactive
@@ -228,17 +229,17 @@ while running:
                     state="main_menu"
         if event.type == pygame.KEYDOWN:
             if active:
-                input_name_box_text = pygame.font.SysFont('Comic Sans MS', 25).render((' '.join(temp_text)), True, BLACK)
+                input_name_box_text = pygame.font.SysFont('Comic Sans MS', 30).render((' '.join(temp_text)), True, BLACK)
                 temp_text[len(text_input_output)]=event.unicode
-                input_name_box_text = pygame.font.SysFont('Comic Sans MS', 25).render(' '.join(temp_text), True, BLACK)
+                input_name_box_text = pygame.font.SysFont('Comic Sans MS', 30).render(' '.join(temp_text), True, BLACK)
                 if event.key == pygame.K_RETURN:
                     input_name=text_input_output
-                    input_name_box_text = pygame.font.SysFont('Comic Sans MS', 25).render(('Welcome to Hangman '+''.join(input_name))+'!', True, BLACK)
+                    input_name_box_text = pygame.font.SysFont('Comic Sans MS', 30).render(('Welcome to Hangman '+''.join(input_name))+'!', True, BLACK)
                     active = not active
                 elif event.key == pygame.K_BACKSPACE:
                     temp_text=list((''.join(temp_text)).replace('\x08','_'))
                     temp_text[len(''.join(temp_text).replace('_',''))-1]='_'
-                    input_name_box_text = pygame.font.SysFont('Comic Sans MS', 25).render(' '.join(temp_text), True, BLACK)
+                    input_name_box_text = pygame.font.SysFont('Comic Sans MS', 30).render(' '.join(temp_text), True, BLACK)
                     text_input_output = text_input_output[:-1]
                 else:
                     text_input_output += event.unicode

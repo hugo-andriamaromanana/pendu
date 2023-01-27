@@ -15,6 +15,7 @@ PURPLE=(128,0,128)
 PINK=(255,192,203)
 LIGHT_BLUE=(173,216,230)
 CLEAR_BLUE=(0,191,255)
+GREY=(128,128,128)
 #---------------------Importing txt-----------
 f = open('mots.txt', 'r')
 content = f.read()
