@@ -42,7 +42,8 @@ end_messages={
     9: "Your parents wasted their time on you!",
     10: "You are done. Fired",
     420: "",
-    69:"Please, Enter a username and press ENTER"
+    99:"Add a new word, and press ENTER to add it to the .txt",
+    69:"Please, Enter a username and press ENTER",
     80:"A new word has been added to the .txt"
 }
 text_input_box = pygame.Rect(100, 100, 140, 32)
@@ -195,6 +196,8 @@ while running:
             scoreboard[state][def_user]=int(score_calculate(game_vars['score'],int(time.time()-start),SCORE_COEF[state]))
             count_for_end_message=420
             end_messages[count_for_end_message]=f'Congrats, check the {state} leaderboard!'
+            with open('scoreboard.json','w') as f:
+                json.dump(scoreboard,f)
             state="main_menu"
         if count_for_end_message==11:
             running=False
@@ -208,6 +211,8 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if state=="main_menu":
                 if add_new_word_button_rect.collidepoint(event.pos):
+                    title_better_luck_next_time_text = COMIC_SANS.render(end_messages[99], True, BLACK)
+                    title_better_luck_next_time_rect_center=title_better_luck_next_time_text.get_rect(center=title_better_luck_next_time_rect.center)
                     active=False
                     toggle_add=True
                     add_new_word_button_text = COMIC_SANS.render(' '.join(typed_word), True, WHITE)
@@ -287,6 +292,8 @@ while running:
                     typed_word=['_']*6
                     add_new_word_button_text = COMIC_SANS.render("Add new word", True, WHITE)
                     add_new_word_button_rect_center=add_new_word_button_text.get_rect(center=add_new_word_button_rect.center)
+                    title_better_luck_next_time_text = COMIC_SANS.render(end_messages[80], True, BLACK)
+                    title_better_luck_next_time_rect_center=title_better_luck_next_time_text.get_rect(center=title_better_luck_next_time_rect.center)
                     toggle_add=False
             if active:
                 input_name_box_text = COMIC_SANS.render('Please enter your name: '+(' '.join(visual_text)), True, BLACK)
