@@ -256,6 +256,7 @@ while running:
                     running=False
                 #Hard button
                 elif Hard_button_rect.collidepoint(event.pos):
+                    reset_game_vars(game_vars)
                     #If no user name, lvls can't be accesssed
                     if def_user=='':
                         title_better_luck_next_time_text = COMIC_SANS.render(end_messages[69], True, BLACK)
@@ -269,6 +270,7 @@ while running:
                     game_vars["word_to_guess"] = random.choice(content)
                     game_vars["word_to_guess_display"] = ["_"] * len(game_vars["word_to_guess"])
                 elif Medium_button_rect.collidepoint(event.pos):
+                    reset_game_vars(game_vars)
                     if def_user=='':
                         title_better_luck_next_time_text = COMIC_SANS.render(end_messages[69], True, BLACK)
                         title_better_luck_next_time_rect_center=title_better_luck_next_time_text.get_rect(center=title_better_luck_next_time_rect.center)
@@ -280,6 +282,7 @@ while running:
                     game_vars["word_to_guess"] = random.choice(content)
                     game_vars["word_to_guess_display"] = ["_"] * len(game_vars["word_to_guess"])
                 elif Easy_button_rect.collidepoint(event.pos):
+                    reset_game_vars(game_vars)
                     if def_user=='':
                         title_better_luck_next_time_text = COMIC_SANS.render(end_messages[69], True, BLACK)
                         title_better_luck_next_time_rect_center=title_better_luck_next_time_text.get_rect(center=title_better_luck_next_time_rect.center)
