@@ -117,6 +117,8 @@ def game_state(state):
     global input_name
     global game_vars
     global count_for_end_message
+    #---------------------GUI---------------------------
+    #--------------------Main menu-----------------------
     if state=="main_menu":
         pygame.draw.rect(screen, CLEAR_BLUE, add_new_word_button_rect)
         screen.blit(add_new_word_button_text, add_new_word_button_rect_center)
@@ -139,6 +141,7 @@ def game_state(state):
         screen.blit(click_me_button_text, click_me_button_rect_center)
         pygame.draw.rect(screen, WHITE, input_name_box_rect)
         screen.blit(input_name_box_text, input_name_box_rect_center)
+    #--------------------Scoreboard-----------------------------------
     elif state=="scoreboard":
         pygame.draw.rect(scoreboard_popup, RED, scoreboard_popup_exit_button_rect)
         scoreboard_popup.blit(scoreboard_popup_exit_button_text, scoreboard_popup_exit_button_rect_center)
@@ -146,6 +149,7 @@ def game_state(state):
         scoreboard_popup.blit(COMIC_SANS.render("Easy", True, YELLOW), (100, 100))
         scoreboard_popup.blit(COMIC_SANS.render("Medium", True, ORANGE), (450, 100))
         scoreboard_popup.blit(COMIC_SANS.render("Hard", True, RED), (800, 100))
+    #Shows the top 3 players in the scoreboard
         for i, level in enumerate(levels):
             scoreboard_data = eval(f"{level}_scoreboard_data")
             x = 20 + 350 * i
@@ -153,6 +157,7 @@ def game_state(state):
                 y = 200 + 100 * j
                 text = f"{position} {get_3_best(scoreboard_data)[j]}"
                 scoreboard_popup.blit(COMIC_SANS.render(text, True, BLACK), (x, y))
+    #---------------------Hard level---------------------------------------
     elif state=="Hard":
         DISPLAYSURF.blit(pygame.image.load("hangman.png").subsurface(game_vars["sub_surface"]),(200, 250))
         DISPLAYSURF.blit(COMIC_SANS.render("Difficulty = Hard", True, RED), (400, 10))
@@ -163,6 +168,7 @@ def game_state(state):
         DISPLAYSURF.blit(COMIC_SANS.render("Letters used: "+", ".join(game_vars['used_keys']), True, BLACK), (100, 600))
         DISPLAYSURF.blit(COMIC_SANS.render("Score: "+str(game_vars['score']), True, BLACK), (500, 600))
         game_vars = game_time(game_vars)
+    #--------------------Medium lvl-------------------------------
     elif state=="Medium":
         DISPLAYSURF.blit(pygame.image.load("hangman.png").subsurface(game_vars["sub_surface"]),(200, 250))
         DISPLAYSURF.blit(COMIC_SANS.render("Difficulty = Medium", True, ORANGE), (400, 10))
@@ -173,6 +179,7 @@ def game_state(state):
         DISPLAYSURF.blit(COMIC_SANS.render("Letters used: "+", ".join(game_vars['used_keys']), True, BLACK), (100, 600))
         DISPLAYSURF.blit(COMIC_SANS.render("Score: "+str(game_vars['score']), True, BLACK), (500, 600))
         game_vars = game_time(game_vars)
+    #------------------Easy lvl--------------------------------
     elif state=="Easy":
         DISPLAYSURF.blit(pygame.image.load("hangman.png").subsurface(game_vars["sub_surface"]),(200, 250))
         DISPLAYSURF.blit(COMIC_SANS.render("Difficulty = Easy", True, YELLOW), (400, 10))
@@ -184,32 +191,45 @@ def game_state(state):
         DISPLAYSURF.blit(COMIC_SANS.render("Score: "+str(game_vars['score']), True, BLACK), (500, 600))
         game_vars = game_time(game_vars)
 
+#Animations
 eggman_display_every_1s()
+#---------------------------Main logic------------------------------------
 while running:
+    #--------------------Logic behind the toggle add new word button----------------
     if toggle_add == False:
         add_new_word_button_text = COMIC_SANS.render("Add new word", True, WHITE)
         add_new_word_button_rect_center=add_new_word_button_text.get_rect(center=add_new_word_button_rect.center)
+    #--------------------Custom messages for lost games------------------------------
     if count_for_end_message not in [i for i in end_messages]:
         count_for_end_message=0
+    #-------------------Logic behind end of the game / WIN CONDITIONS------------------------------------
     if check_loose(game_vars):
+        #----------------Add to scoreboard if score higher than top 3-------------------
         if int(score_calculate(game_vars['score'],int(time.time()-start),SCORE_COEF[state])) > int(Hard_scoreboard_data[[i for i in Hard_scoreboard_data][2]]):
             scoreboard[state][def_user]=int(score_calculate(game_vars['score'],int(time.time()-start),SCORE_COEF[state]))
             with open('scoreboard.json','w') as f:
                 json.dump(scoreboard,f,indent=4)
             count_for_end_message=420
             end_messages[count_for_end_message]=f'Congrats, check the {state} leaderboard!'
+            game_vars['score']=0
             state="main_menu"
+        #-----------------Quit if too much testing------------------------------
         if count_for_end_message==11:
             running=False
         title_better_luck_next_time_text = COMIC_SANS.render(end_messages[count_for_end_message], True, BLACK)
         title_better_luck_next_time_rect_center=title_better_luck_next_time_text.get_rect(center=title_better_luck_next_time_rect.center)
         game_vars=reset_game_vars(game_vars)
         state="main_menu"
+    #--------------------Handling events-------------------------------------------
     for event in pygame.event.get():
+        #------------------Return Keys-----------------------------
         if event.type == pygame.QUIT:
             running = False
+        #--------------------Logic Buttons---------------------------
         if event.type == pygame.MOUSEBUTTONDOWN:
+            #-----------------Main menu logic---------------------
             if state=="main_menu":
+                #Add new word button
                 if add_new_word_button_rect.collidepoint(event.pos):
                     title_better_luck_next_time_text = COMIC_SANS.render(end_messages[99], True, BLACK)
                     title_better_luck_next_time_rect_center=title_better_luck_next_time_text.get_rect(center=title_better_luck_next_time_rect.center)
@@ -217,6 +237,7 @@ while running:
                     toggle_add=True
                     add_new_word_button_text = COMIC_SANS.render(' '.join(typed_word), True, WHITE)
                     add_new_word_button_rect_center=add_new_word_button_text.get_rect(center=add_new_word_button_rect.center)
+                #Input name button
                 if input_name_box_rect.collidepoint(event.pos):
                     toggle_add=False
                     active = not active
@@ -228,13 +249,17 @@ while running:
                 else:
                     active = False
                 color = color_active if active else color_inactive
+                #Exit button
                 if exit_button_rect.collidepoint(event.pos):
                     running=False
+                #Hard button
                 elif Hard_button_rect.collidepoint(event.pos):
+                    #If no user name, lvls can't be accesssed
                     if def_user=='':
                         title_better_luck_next_time_text = COMIC_SANS.render(end_messages[69], True, BLACK)
                         title_better_luck_next_time_rect_center=title_better_luck_next_time_text.get_rect(center=title_better_luck_next_time_rect.center)
                         continue
+                    #Show different message if death
                     if def_user!='': 
                         count_for_end_message+=1
                     state="Hard"
@@ -261,15 +286,19 @@ while running:
                     start=time.time()
                     game_vars["word_to_guess"] = random.choice(content)
                     game_vars["word_to_guess_display"] = ["_"] * len(game_vars["word_to_guess"])
+                #Updates scoreboards when scoreboard button is pressed
                 elif scoreboard_button_rect.collidepoint(event.pos):
                     Easy_scoreboard_data=sort_score_board(scoreboard[([i for i in scoreboard])[0]])
                     Medium_scoreboard_data=sort_score_board(scoreboard[([i for i in scoreboard])[1]])
                     Hard_scoreboard_data = sort_score_board(scoreboard[([i for i in scoreboard])[2]])
                     state="scoreboard"
+            #exit button for scoreboard
             elif state=="scoreboard":
                 if scoreboard_popup_exit_button_rect.collidepoint(event.pos):
                     state="main_menu"
+        #Handling typing events
         if event.type == pygame.KEYDOWN:
+            #logic behind Add new word button
             if toggle_add:
                 if event.unicode == '\x08':
                     add_word_temp=add_word_temp[:-1]
@@ -295,6 +324,7 @@ while running:
                     title_better_luck_next_time_text = COMIC_SANS.render(end_messages[80], True, BLACK)
                     title_better_luck_next_time_rect_center=title_better_luck_next_time_text.get_rect(center=title_better_luck_next_time_rect.center)
                     toggle_add=False
+            #Logic behind username button
             if active:
                 input_name_box_text = COMIC_SANS.render('Please enter your name: '+(' '.join(visual_text)), True, BLACK)
                 if event.key == pygame.K_LSHIFT or event.key == pygame.K_RSHIFT:
@@ -320,6 +350,7 @@ while running:
                     text_input_output += event.unicode
             if event.key == pygame.K_ESCAPE:
                 state="main_menu"
+        #Animations
         if event.type == UPDATEEGGMANANIMATION and state=="main_menu":
             if not active:
                 if text_input_output == '':
@@ -331,6 +362,7 @@ while running:
             sub_surface[0]+=200
             if sub_surface[0]>1201: 
                 sub_surface[0]=0
+        #Exit
         if event.type == pygame.QUIT:
             running = False
     screen.fill(WHITE)

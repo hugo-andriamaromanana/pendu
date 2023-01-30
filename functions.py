@@ -57,6 +57,7 @@ def get_3_best(dic):
     for i in dic:
         arr.append(f'{i} : {dic[i]}')
     return arr[:3]
+#Animations updates
 def eggman_display_every_1s():
     pygame.time.set_timer(UPDATEEGGMANANIMATION, 800)
 # def confetti_time():
@@ -67,13 +68,16 @@ def eggman_display_every_1s():
 #         height = random.randint(5, 20)
 #         confetti_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 #         confetti_list.append([pygame.Rect(x, y, width, height), confetti_color])
+#Hangman animations in game
 def parse_subsurface(x, y, width, height, lives):
     SQUARE_SIZE = 200
     return [x + SQUARE_SIZE * (lives - 1), y, width, height]
+#Time appearance
 def parse_time(time):
     minutes = int(time / 60)
     seconds = int(time % 60)
     return f"{minutes}m {seconds}s"
+#Handling game events
 def game_time(game_vars): 
     #win condition
     if "_" not in game_vars['word_to_guess_display']:
@@ -93,10 +97,12 @@ def game_time(game_vars):
                 game_vars['lives'] -= 1
                 game_vars['sub_surface'][0] += 200
     return game_vars
+#Check loose to exit the game
 def check_loose(game_vars):
     if game_vars['lives'] <= 0:
         return True
     return False
+#Reset vars in game that aren't score
 def reset_game_vars(game_vars):
     word_to_guess = list(random.choice(content).lower())
     game_vars['word_to_guess']= word_to_guess
