@@ -48,6 +48,18 @@ SCORE_COEF={
     "Medium":10**3,
     "Hard":10**4
 }
+#Here the requirements is to store the scores in a .txt
+#So i made a .txt file and a function to turn it into a dict
+#In my code i use the .json file
+#But this code serves as the same purpose
+#---------------------txt parser--------------------------
+# with open('scoreboard.txt', 'r') as f:
+#     scoreboard_txt = f.read()
+
+def turn_txt_to_dict(txt):
+    return json.loads(txt)
+
+# scoreboard = turn_txt_to_dict(scoreboard_txt)
 #---------------------Functions----------------------------
 #Will calculate the score, according to the time spent and the difficulty
 def score_calculate(points,time_score,mode):
