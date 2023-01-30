@@ -1,11 +1,32 @@
 {
-    "Easy":{
-        "Pedro":3,"Jose":1,"Carlos":2,"Luis":0,"Manuel":0,"Antonio":0,"Juan":0
+    "Easy": {
+        "Pedro": 3,
+        "Jose": 1,
+        "Carlos": 2,
+        "Luis": 0,
+        "Manuel": 0,
+        "Antonio": 0,
+        "Juan": 0
     },
-    "Medium":{
-        "Hugo":1,"Miguel":2,"Sergio":3,"Ricardo":0,"Jorge":0,"Juan":0,"Pedro":0,"Jose":6
+    "Medium": {
+        "Hugo": 191,
+        "Miguel": 2,
+        "Sergio": 3,
+        "Ricardo": 0,
+        "Jorge": 0,
+        "Juan": 0,
+        "Pedro": 0,
+        "Jose": 6
     },
-    "Hard":{
-        "Hugo":69,"Miguel":12,"Sergio":11,"Ricardo":6,"Carlos":0,"Luis":0,"Manuel":0,"Antonio":0,"Francisco":0
+    "Hard": {
+        "Hugo": 1250,
+        "Miguel": 12,
+        "Sergio": 11,
+        "Ricardo": 6,
+        "Carlos": 0,
+        "Luis": 0,
+        "Manuel": 0,
+        "Antonio": 0,
+        "Francisco": 0
     }
 }

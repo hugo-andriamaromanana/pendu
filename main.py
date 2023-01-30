@@ -194,10 +194,10 @@ while running:
     if check_loose(game_vars):
         if int(score_calculate(game_vars['score'],int(time.time()-start),SCORE_COEF[state])) > int(Hard_scoreboard_data[[i for i in Hard_scoreboard_data][2]]):
             scoreboard[state][def_user]=int(score_calculate(game_vars['score'],int(time.time()-start),SCORE_COEF[state]))
+            with open('scoreboard.json','w') as f:
+                json.dump(scoreboard,f,indent=4)
             count_for_end_message=420
             end_messages[count_for_end_message]=f'Congrats, check the {state} leaderboard!'
-            with open('scoreboard.json','w') as f:
-                json.dump(scoreboard,f)
             state="main_menu"
         if count_for_end_message==11:
             running=False
