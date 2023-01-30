@@ -90,12 +90,12 @@ def parse_time(time):
     seconds = int(time % 60)
     return f"{minutes}m {seconds}s"
 #Handling game events
-def game_time(game_vars): 
+def game_time(game_vars,events): 
     #win condition
     if "_" not in game_vars['word_to_guess_display']:
         game_vars['score'] += 1
         game_vars=reset_game_vars(game_vars)
-    for event in pygame.event.get():
+    for event in events:
         if event.type == KEYDOWN:
             if event.unicode in game_vars["used_keys"] or event.unicode not in AUTHORIZED_KEYS or event.unicode == "":
                 continue

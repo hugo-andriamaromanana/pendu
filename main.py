@@ -12,6 +12,7 @@ screen.fill(WHITE)
 COMIC_SANS= pygame.font.SysFont('Comic Sans MS', 30)
 DISPLAYSURF = pygame.display.set_mode((800, 400))
 #---------------------VARS---------------------
+events = []
 new_word=''
 typed_word = ['_'] * 9
 count_for_end_message=0
@@ -167,7 +168,7 @@ def game_state(state):
         DISPLAYSURF.blit(COMIC_SANS.render("Time : " + parse_time(time.time() - start), True, (0, 0, 0)), (500, 500))
         DISPLAYSURF.blit(COMIC_SANS.render("Letters used: "+", ".join(game_vars['used_keys']), True, BLACK), (100, 600))
         DISPLAYSURF.blit(COMIC_SANS.render("Score: "+str(game_vars['score']), True, BLACK), (500, 600))
-        game_vars = game_time(game_vars)
+        game_vars = game_time(game_vars,events)
     #--------------------Medium lvl-------------------------------
     elif state=="Medium":
         DISPLAYSURF.blit(pygame.image.load("hangman.png").subsurface(game_vars["sub_surface"]),(200, 250))
@@ -178,7 +179,7 @@ def game_state(state):
         DISPLAYSURF.blit(COMIC_SANS.render("Time : " + parse_time(time.time() - start), True, (0, 0, 0)), (500, 500))
         DISPLAYSURF.blit(COMIC_SANS.render("Letters used: "+", ".join(game_vars['used_keys']), True, BLACK), (100, 600))
         DISPLAYSURF.blit(COMIC_SANS.render("Score: "+str(game_vars['score']), True, BLACK), (500, 600))
-        game_vars = game_time(game_vars)
+        game_vars = game_time(game_vars,events)
     #------------------Easy lvl--------------------------------
     elif state=="Easy":
         DISPLAYSURF.blit(pygame.image.load("hangman.png").subsurface(game_vars["sub_surface"]),(200, 250))
@@ -189,7 +190,7 @@ def game_state(state):
         DISPLAYSURF.blit(COMIC_SANS.render("Time : " + parse_time(time.time() - start), True, (0, 0, 0)), (500, 500))
         DISPLAYSURF.blit(COMIC_SANS.render("Letters used: "+", ".join(game_vars['used_keys']), True, BLACK), (100, 600))
         DISPLAYSURF.blit(COMIC_SANS.render("Score: "+str(game_vars['score']), True, BLACK), (500, 600))
-        game_vars = game_time(game_vars)
+        game_vars = game_time(game_vars,events)
 
 #Animations
 eggman_display_every_1s()
@@ -221,7 +222,8 @@ while running:
         game_vars=reset_game_vars(game_vars)
         state="main_menu"
     #--------------------Handling events-------------------------------------------
-    for event in pygame.event.get():
+    events = pygame.event.get()
+    for event in events:
         #------------------Return Keys-----------------------------
         if event.type == pygame.QUIT:
             running = False
