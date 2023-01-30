@@ -44,9 +44,9 @@ UPDATEEGGMANANIMATION = USEREVENT+1
 confetti_list=[]
 start = time.time()
 SCORE_COEF={
-    "Easy":10**4,
-    "Medium":10**5,
-    "Hard":10**6
+    "Easy":10**2,
+    "Medium":10**3,
+    "Hard":10**4
 }
 #---------------------Functions----------------------------
 #Will calculate the score, according to the time spent and the difficulty
