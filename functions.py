@@ -20,8 +20,8 @@ GREY=(128,128,128)
 f = open('mots.txt', 'r')
 content = f.read()
 content = content.split('\n')
-content=content[:-1]
 content = [i.lower() for i in content]
+f.close()
 #---------------------Importing Json-----------
 with open("scoreboard.json","r") as f:
     scoreboard = json.load(f)
@@ -81,7 +81,6 @@ def game_time(game_vars):
         game_vars=reset_game_vars(game_vars)
     for event in pygame.event.get():
         if event.type == KEYDOWN:
-            print(event.unicode)
             if event.unicode in game_vars["used_keys"] or event.unicode not in AUTHORIZED_KEYS or event.unicode == "":
                 continue
             if event.unicode not in game_vars['word_to_guess']:
