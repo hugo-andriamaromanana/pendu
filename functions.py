@@ -41,7 +41,6 @@ running=True
 state="main_menu"
 sub_surface = [0, 0, 200, 200]
 UPDATEEGGMANANIMATION = USEREVENT+1
-confetti_list=[]
 start = time.time()
 SCORE_COEF={
     "Easy":10**2,
@@ -72,14 +71,6 @@ def get_3_best(dic):
 #Animations updates
 def eggman_display_every_1s():
     pygame.time.set_timer(UPDATEEGGMANANIMATION, 800)
-# def confetti_time():
-#     for i in range(50):
-#         x = random.randint(0, 700)
-#         y = random.randint(0, 500)
-#         width = random.randint(5, 20)
-#         height = random.randint(5, 20)
-#         confetti_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-#         confetti_list.append([pygame.Rect(x, y, width, height), confetti_color])
 #Hangman animations in game
 def parse_subsurface(x, y, width, height, lives):
     SQUARE_SIZE = 200

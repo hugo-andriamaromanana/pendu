@@ -45,7 +45,7 @@ end_messages={
     420: "",
     99:"Add a new word, and press ENTER to add it to the .txt",
     69:"Please, Enter a username and press ENTER",
-    80:"A new word has been added to the .txt"
+    80:"A new word has been added to the .txt",
 }
 text_input_box = pygame.Rect(100, 100, 140, 32)
 color_inactive = BLACK
@@ -239,6 +239,10 @@ while running:
                     toggle_add=True
                     add_new_word_button_text = COMIC_SANS.render(' '.join(typed_word), True, WHITE)
                     add_new_word_button_rect_center=add_new_word_button_text.get_rect(center=add_new_word_button_rect.center)
+                #Custom messages display
+                if click_me_button_rect.collidepoint(event.pos):
+                    title_better_luck_next_time_text = COMIC_SANS.render(end_messages[random.choice([i for i in range(10)])], True, BLACK)
+                    title_better_luck_next_time_rect_center=title_better_luck_next_time_text.get_rect(center=title_better_luck_next_time_rect.center)
                 #Input name button
                 if input_name_box_rect.collidepoint(event.pos):
                     toggle_add=False
