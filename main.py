@@ -331,9 +331,6 @@ while running:
             sub_surface[0]+=200
             if sub_surface[0]>1201: 
                 sub_surface[0]=0
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
     screen.fill(WHITE)
     game_state(state)
     pygame.display.update()
